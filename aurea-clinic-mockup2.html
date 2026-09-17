@@ -1,0 +1,1555 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Aurea Clinic — ระบบบันทึกและติดตามการรักษา</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Prompt:wght@400;500;600&family=Noto+Sans+Thai:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{
+  --primary:#7FB5AB; --primary-deep:#4A8577; --secondary:#8FD4D0;
+  --mint:#D9F0E8; --bg:#FFFFFF; --card:#F3FAF8; --border:#DCEAE5;
+  --text:#28362F; --text-sub:#6B7D74; --text-faint:#A5B5AE;
+  --happy:#4A8577; --happy-bg:#F3FAF8;
+  --complant:#D08A5A; --complant-bg:#FBEEE4; --complant-border:#F0DCCB; --complant-text:#8A5C36;
+  --review:#8083C0; --review-bg:#EDEDF8; --review-border:#DEDEF0; --review-text:#5B5E96;
+}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);font-family:"Noto Sans Thai","Noto Sans",system-ui,sans-serif;color:var(--text);-webkit-font-smoothing:antialiased}
+a{color:var(--primary-deep);text-decoration:none}
+a:hover{color:var(--text)}
+input,select,textarea,button{font-family:inherit;font-size:inherit;color:inherit}
+input::placeholder,textarea::placeholder{color:var(--text-faint)}
+input,select,textarea{border:1px solid var(--border);border-radius:10px;padding:9px 11px;font-size:13px;background:#fff;outline:none}
+input:focus,select:focus,textarea:focus{border-color:var(--primary);background:var(--card)}
+.font-heading{font-family:Prompt,sans-serif}
+.btn{cursor:pointer;user-select:none}
+.btn-primary{text-align:center;background:var(--primary);color:#fff;font-family:Prompt,sans-serif;font-weight:500;font-size:13px;padding:11px;border-radius:10px;border:none;cursor:pointer}
+.btn-primary:hover{background:var(--primary-deep)}
+.btn-outline{text-align:center;border:1px solid var(--border);font-size:13px;padding:11px 14px;border-radius:10px;color:var(--text-sub);cursor:pointer;background:#fff}
+.btn-outline:hover{background:var(--card)}
+.pill{font-size:11.5px;border-radius:20px;padding:3px 9px;display:inline-block}
+.dot{display:inline-block;border-radius:3px}
+.app-shell{display:grid;grid-template-columns:246px minmax(0,1fr);min-height:100vh;background:#fff}
+aside.sidebar{border-right:1px solid var(--border);padding:22px 16px;display:flex;flex-direction:column;gap:22px;background:#fff;position:sticky;top:0;height:100vh;overflow:auto}
+.logo-row{display:flex;align-items:center;gap:11px;padding:0 6px}
+.logo-mark{width:34px;height:34px;border-radius:11px;background:var(--primary);display:flex;align-items:center;justify-content:center;font-family:Prompt,sans-serif;font-weight:600;font-size:15px;color:#fff}
+.logo-name{font-family:Prompt,sans-serif;font-weight:600;font-size:14.5px;letter-spacing:.01em}
+.logo-sub{font-size:11px;color:var(--text-sub);margin-top:1px}
+nav.mainnav{display:flex;flex-direction:column;gap:3px}
+.nav-label{font-size:10.5px;letter-spacing:.09em;text-transform:uppercase;color:var(--text-faint);font-family:Prompt,sans-serif;padding:0 8px 7px}
+.nav-item{display:flex;align-items:center;gap:10px;padding:10px 12px;border-radius:10px;font-family:Prompt,sans-serif;font-weight:400;font-size:13.5px;cursor:pointer;color:var(--text-sub);border:none;background:none;width:100%;text-align:left}
+.nav-item:hover{background:var(--card);color:var(--text)}
+.nav-item.active{background:var(--mint);color:var(--text);font-weight:500}
+.nav-dot{width:6px;height:6px;border-radius:50%;background:var(--border);flex:none}
+.nav-item.active .nav-dot{background:var(--primary-deep)}
+.nav-count{margin-left:auto;font-size:11.5px;font-family:Prompt,sans-serif;color:var(--text-faint)}
+.nav-item.active .nav-count{color:var(--primary-deep)}
+.sidebar-bottom{margin-top:auto;display:flex;flex-direction:column;gap:12px}
+.legend-box{border:1px solid var(--border);border-radius:12px;padding:13px 14px;display:flex;flex-direction:column;gap:9px}
+.legend-title{font-size:10.5px;letter-spacing:.08em;text-transform:uppercase;color:var(--text-faint);font-family:Prompt,sans-serif}
+.legend-item{display:flex;align-items:center;gap:8px;font-size:12px}
+.user-row{border-top:1px solid var(--border);padding-top:13px;display:flex;align-items:center;gap:10px}
+.avatar{width:31px;height:31px;border-radius:50%;background:var(--secondary);display:flex;align-items:center;justify-content:center;font-size:12px;font-family:Prompt,sans-serif;font-weight:500;color:var(--text);flex:none}
+.user-name{font-size:12.5px;font-weight:500}
+.user-role{font-size:11px;color:var(--text-sub)}
+.logout-btn{margin-left:auto;font-size:11.5px;color:var(--text-sub);cursor:pointer;padding:5px 8px;border-radius:8px;background:none;border:none}
+.logout-btn:hover{background:var(--card);color:var(--text)}
+main.content{padding:28px 34px 46px;min-width:0}
+header.pagehead{display:flex;align-items:flex-end;gap:18px;flex-wrap:wrap;margin-bottom:24px}
+.crumb{font-size:11.5px;color:var(--text-sub);margin-bottom:5px}
+.pagetitle{margin:0;font-family:Prompt,sans-serif;font-weight:600;font-size:24px;letter-spacing:.005em}
+.pagedesc{margin:6px 0 0;font-size:13px;color:var(--text-sub);max-width:64ch}
+.head-right{margin-left:auto;display:flex;align-items:center;gap:10px}
+.role-switch{display:flex;align-items:center;gap:8px;border:1px solid var(--border);border-radius:10px;padding:7px 11px;white-space:nowrap}
+.role-switch select{border:0;background:transparent;padding:0;font-size:12.5px;font-family:Prompt,sans-serif;font-weight:500;outline:none;cursor:pointer}
+.today-chip{font-size:12.5px;color:var(--text-sub);border:1px solid var(--border);border-radius:10px;padding:8px 12px;white-space:nowrap}
+section.card{border:1px solid var(--border);border-radius:12px}
+.grid-auto{display:grid;gap:16px}
+table.datatable{width:100%;border-collapse:collapse;font-size:12.5px}
+table.datatable thead th{text-align:left;padding:10px 14px;font-family:Prompt,sans-serif;font-weight:500;font-size:11.5px;color:var(--text-sub);background:var(--card);border-bottom:1px solid var(--border)}
+table.datatable tbody td{padding:12px 14px;border-top:1px solid var(--border);color:var(--text-sub)}
+table.datatable tbody tr:hover{background:var(--card)}
+.sortable{cursor:pointer;display:inline-flex;align-items:center;gap:4px;user-select:none}
+.sortable:hover{color:var(--text)}
+.search-input{position:relative}
+.search-input input{padding-left:34px;width:100%}
+.search-icon{position:absolute;left:11px;top:50%;transform:translateY(-50%);color:var(--text-faint);pointer-events:none}
+.tab-switch{display:inline-flex;gap:4px;border:1px solid var(--border);border-radius:11px;padding:4px;width:fit-content}
+.tab-btn{padding:8px 16px;border-radius:8px;font-family:Prompt,sans-serif;font-size:13px;cursor:pointer;border:none;background:none;color:var(--text-sub)}
+.tab-btn.active{background:var(--mint);font-weight:500;color:var(--text)}
+.tab-btn:hover:not(.active){background:var(--card)}
+.filter-chip{font-size:12px;padding:6px 11px;border-radius:20px;border:1px solid var(--border);color:var(--text-sub);cursor:pointer;background:#fff}
+.filter-chip:hover{background:var(--card)}
+.filter-chip.active{background:var(--mint);color:var(--text);font-family:Prompt,sans-serif;font-weight:500;border-color:var(--mint)}
+.checkbox-row{display:flex;align-items:center;gap:10px;border:1px solid var(--border);border-radius:10px;padding:10px 12px;cursor:pointer}
+.checkbox-row:hover{background:var(--card)}
+.checkbox-row.checked{border-color:var(--primary);background:var(--card)}
+.checkbox-box{width:17px;height:17px;border-radius:5px;border:1px solid var(--border);flex:none;display:flex;align-items:center;justify-content:center;font-size:11px}
+.checkbox-box.checked{background:var(--primary);border-color:var(--primary);color:#fff}
+.modal-overlay{position:fixed;inset:0;background:rgba(40,54,47,.32);display:flex;align-items:center;justify-content:center;padding:28px;z-index:40}
+.modal-box{background:#fff;border:1px solid var(--border);border-radius:14px;width:min(560px,100%);max-height:88vh;overflow:auto;padding:24px}
+.stat-card{border-radius:12px;padding:19px 20px;border:1px solid var(--border)}
+.stat-card .stat-num{font-family:Prompt,sans-serif;font-weight:600;font-size:36px;line-height:1.1;margin-top:10px}
+.stat-card .stat-label{display:flex;align-items:center;gap:8px;font-size:12.5px}
+.stat-card .stat-sub{font-size:11.5px;margin-top:4px}
+.hidden{display:none !important}
+.thumb{border-radius:9px;border:1px solid var(--border);aspect-ratio:1;background:repeating-linear-gradient(135deg,var(--card) 0 8px,#E6F2EE 8px 16px);display:flex;align-items:flex-end;padding:6px}
+.thumb-label{font-family:ui-monospace,Menlo,monospace;font-size:8.5px;color:var(--text-sub)}
+.thumb-add{aspect-ratio:1;border-radius:10px;border:1px dashed var(--border);display:flex;align-items:center;justify-content:center;color:var(--primary);font-size:18px;cursor:pointer;background:none}
+.thumb-add:hover{background:var(--card)}
+::-webkit-scrollbar{width:9px;height:9px}
+::-webkit-scrollbar-thumb{background:var(--border);border-radius:5px}
+.toast{position:fixed;bottom:22px;left:50%;transform:translateX(-50%);background:var(--text);color:#fff;font-size:13px;padding:11px 18px;border-radius:10px;font-family:Prompt,sans-serif;z-index:100;opacity:0;pointer-events:none;transition:opacity .2s, transform .2s}
+.toast.show{opacity:1;transform:translateX(-50%) translateY(-4px)}
+@media(max-width:880px){
+  .app-shell{grid-template-columns:1fr}
+  aside.sidebar{display:none}
+  main.content{padding:18px}
+}
+</style>
+</head>
+<body>
+
+<div id="root"></div>
+
+<script>
+/* ======================= DATA ======================= */
+const DOCTORS = ['พ.ญ. ปวีณา ศรีวัฒน์', 'น.พ. ธนกฤต วงศ์ไพศาล'];
+const SALES = ['ปิยะ ชูเกียรติ', 'สมฤทัย พงษ์พานิช'];
+
+let customers = [
+  { id:1, name:'คุณ ณัฐริกา สุวรรณโชติ', hn:'HN-00231', phone:'081-234-5678', type:'ลูกค้าเก่า', doctor:DOCTORS[0], sale:SALES[0], date:'02 ก.ย. 2569', procedure:'Filler ร่องแก้ม 2 cc', status:'happy' },
+  { id:2, name:'คุณ พิมพ์ชนก อารีรักษ์', hn:'HN-00198', phone:'089-555-1122', type:'ลูกค้าเก่า', doctor:DOCTORS[1], sale:SALES[0], date:'02 ก.ย. 2569', procedure:'Botox กราม 50 u', status:'complant' },
+  { id:3, name:'คุณ กัญญาวีร์ ทองแท้', hn:'HN-00305', phone:'086-777-4433', type:'ลูกค้าใหม่', doctor:DOCTORS[0], sale:SALES[1], date:'01 ก.ย. 2569', procedure:'Laser Pico หน้า', status:'complant' },
+  { id:4, name:'คุณ เมธาวี จันทร์เพ็ง', hn:'HN-00112', phone:'082-345-6789', type:'ลูกค้าเก่า', doctor:DOCTORS[1], sale:SALES[1], date:'31 ส.ค. 2569', procedure:'Laser Toning หน้า', status:'review' },
+  { id:5, name:'คุณ ปวริศา ธนสาร', hn:'HN-00287', phone:'080-111-2233', type:'ลูกค้าเก่า', doctor:DOCTORS[0], sale:SALES[0], date:'29 ส.ค. 2569', procedure:'Botox หน้าผาก 30 u', status:'review' },
+  { id:6, name:'คุณ ชญาดา เกียรติกุล', hn:'HN-00276', phone:'061-222-9988', type:'ลูกค้าใหม่', doctor:DOCTORS[1], sale:SALES[1], date:'27 ส.ค. 2569', procedure:'Filler ใต้ตา 1 cc', status:'review' },
+  { id:7, name:'คุณ ศิรประภา วงศ์ดี', hn:'HN-00330', phone:'092-888-1234', type:'ลูกค้าใหม่', doctor:DOCTORS[1], sale:SALES[0], date:'05 ก.ย. 2569', procedure:'Meso Fat คาง', status:'complant' },
+  { id:8, name:'คุณ อรณิชา พูนสิน', hn:'HN-00045', phone:'095-333-7766', type:'ลูกค้าเก่า', doctor:DOCTORS[0], sale:SALES[0], date:'28 ส.ค. 2569', procedure:'ร้อยไหม 20 เส้น', status:'happy' },
+  { id:9, name:'คุณ ธัญวลัย ศรีสมบัติ', hn:'HN-00360', phone:'098-456-1122', type:'ลูกค้าใหม่', doctor:DOCTORS[1], sale:SALES[1], date:'06 ก.ย. 2569', procedure:'IV Drip Glutathione', status:'complant' },
+  { id:10, name:'คุณ วรินทร ปัญญาดี', hn:'HN-00399', phone:'084-999-2211', type:'ลูกค้าใหม่', doctor:DOCTORS[0], sale:SALES[1], date:'07 ก.ย. 2569', procedure:'Filler ปาก 1 cc', status:'unclassified' },
+  { id:11, name:'คุณ ปาริชาติ ทองอยู่', hn:'HN-00402', phone:'080-654-3210', type:'ลูกค้าใหม่', doctor:DOCTORS[1], sale:SALES[0], date:'07 ก.ย. 2569', procedure:'Botox รักแร้', status:'unclassified' },
+  { id:12, name:'คุณ ธีรดา แสงทอง', hn:'HN-00408', phone:'061-321-6540', type:'ลูกค้าเก่า', doctor:DOCTORS[0], sale:SALES[1], date:'08 ก.ย. 2569', procedure:'Laser Pico หน้า', status:'unclassified' },
+  { id:13, name:'คุณ นภัสสร ใจดี', hn:'HN-00410', phone:'089-741-8520', type:'ลูกค้าใหม่', doctor:DOCTORS[1], sale:SALES[0], date:'08 ก.ย. 2569', procedure:'Filler ร่องแก้ม 1 cc', status:'unclassified' },
+];
+
+const complants = [
+  { patient:'คุณ ณัฐริกา สุวรรณโชติ', proc:'Filler ร่องแก้ม 2 cc', doctor:DOCTORS[0], date:'04 ก.ย. 2569 · 10:12', age:'2 วัน', by:'สมฤทัย (พนักงาน)', msg:'ฉีดมา 2 วันแล้วค่ะ ข้างซ้ายบวมกว่าข้างขวาเยอะ กดแล้วเจ็บด้วย ส่งรูปมาให้ดูนะคะ' },
+  { patient:'คุณ พิมพ์ชนก อารีรักษ์', proc:'Botox กราม 50 u', doctor:DOCTORS[1], date:'03 ก.ย. 2569 · 16:40', age:'3 วัน', by:'สมฤทัย (พนักงาน)', msg:'ยิ้มแล้วรู้สึกว่ามุมปากไม่เท่ากันค่ะ อยากให้หมอช่วยดูให้หน่อย' },
+  { patient:'คุณ กัญญาวีร์ ทองแท้', proc:'Laser Pico หน้า', doctor:DOCTORS[0], date:'01 ก.ย. 2569 · 11:05', age:'5 วัน', by:'ปิยะ (พนักงาน)', msg:'มีรอยแดงเป็นจุด ๆ บริเวณโหนกแก้มยังไม่หายเลยค่ะ ปกติไหมคะ' },
+  { patient:'คุณ ศิรประภา วงศ์ดี', proc:'Meso Fat คาง', doctor:DOCTORS[1], date:'05 ก.ย. 2569 · 09:20', age:'1 วัน', by:'ปิยะ (พนักงาน)', msg:'คางบวมมากกว่าที่หมอบอกค่ะ กังวลว่าจะผิดปกติ' },
+  { patient:'คุณ อรณิชา พูนสิน', proc:'ร้อยไหม 20 เส้น', doctor:DOCTORS[0], date:'02 ก.ย. 2569 · 14:55', age:'4 วัน', by:'สมฤทัย (พนักงาน)', msg:'คลำเจอปุ่มแข็งใต้ผิวบริเวณแก้มขวาค่ะ' },
+  { patient:'คุณ ธัญวลัย ศรีสมบัติ', proc:'IV Drip Glutathione', doctor:DOCTORS[1], date:'06 ก.ย. 2569 · 08:35', age:'วันนี้', by:'ปิยะ (พนักงาน)', msg:'มีรอยช้ำบริเวณที่แทงเข็มค่ะ ปวดเล็กน้อย' }
+];
+
+const reviewsSaved = [
+  { stars:'★★★★★', date:'06 ก.ย. 2569', text:'ตอนแรกกังวลมาก แต่ทางคลินิกดูแลดีและตามผลให้ตลอด ประทับใจค่ะ', patient:'คุณ ณัฐริกา ส.', proc:'Filler ร่องแก้ม 2 cc', by:'ปิยะ' },
+  { stars:'★★★★★', date:'02 ก.ย. 2569', text:'หน้าใสขึ้นจริง หมออธิบายละเอียด ไม่ขายของเกินจำเป็น', patient:'คุณ เมธาวี จ.', proc:'Laser Toning หน้า', by:'สมฤทัย' },
+  { stars:'★★★★', date:'30 ส.ค. 2569', text:'ผลลัพธ์ดีค่ะ แต่รอคิวนานหน่อยตอนวันเสาร์', patient:'คุณ ปวริศา ธ.', proc:'Botox หน้าผาก 30 u', by:'ปิยะ' },
+  { stars:'★★★★★', date:'28 ส.ค. 2569', text:'ใต้ตาดูสดใสขึ้นมาก พี่พนักงานติดตามอาการให้ทุกวัน', patient:'คุณ ชญาดา ก.', proc:'Filler ใต้ตา 1 cc', by:'สมฤทัย' }
+];
+
+const timeline = [
+  { date:'02 ก.ย. 2569', time:'13:20', kind:'happy', title:'ทำหัตถการเสร็จ — สถานะเริ่มต้น Happy', by:'สมฤทัย (พนักงาน)', detail:'Filler ร่องแก้ม 2 cc โดย พ.ญ. ปวีณา · บันทึกรูป before จากช่างภาพ 3 รูป', hasMedia:true, mediaLabel:'before 01' },
+  { date:'04 ก.ย. 2569', time:'10:12', kind:'complant', title:'เปิดเคส Complant', by:'สมฤทัย (พนักงาน)', detail:'ลูกค้าแจ้งทาง LINE OA ว่าบวมข้างซ้ายมากกว่าขวาและกดเจ็บ · แนบรูปอาการจาก LINE 2 รูป', hasMedia:true, mediaLabel:'LINE 01' },
+  { date:'04 ก.ย. 2569', time:'15:00', kind:'complant', title:'นัดเข้ามาประเมินอาการ', by:'ปิยะ (พนักงาน)', detail:'แพทย์ประเมินว่าเป็นการบวมชั่วคราว นัดฉีดสลายบางส่วน 05 ก.ย. 2569', hasMedia:false },
+  { date:'05 ก.ย. 2569', time:'11:30', kind:'happy', title:'ปิดเคส — กลับเป็น Happy', by:'สมฤทัย (พนักงาน)', detail:'ฉีดสลาย 1 ครั้ง อาการบวมลดลงชัดเจน ลูกค้ายืนยันพอใจ · แนบรูป resolved 2 รูป', hasMedia:true, mediaLabel:'resolved 01' },
+  { date:'06 ก.ย. 2569', time:'09:05', kind:'review', title:'บันทึก Review จาก LINE', by:'ปิยะ (พนักงาน)', detail:'★★★★★ "ตอนแรกกังวลมาก แต่ทางคลินิกดูแลดีและตามผลให้ตลอด ประทับใจค่ะ"', hasMedia:false }
+];
+
+const trackItems = [
+  { patient:'คุณ ณัฐริกา สุวรรณโชติ', proc:'Filler ร่องแก้ม 2 cc · 02 ก.ย.', status:'happy' },
+  { patient:'คุณ ณัฐริกา สุวรรณโชติ', proc:'Botox หน้าผาก 30 u · 02 ก.ย.', status:'happy' },
+  { patient:'คุณ พิมพ์ชนก อารีรักษ์', proc:'Botox กราม 50 u · 02 ก.ย.', status:'complant' },
+  { patient:'คุณ กัญญาวีร์ ทองแท้', proc:'Laser Pico หน้า · 01 ก.ย.', status:'complant' },
+  { patient:'คุณ ศิรประภา วงศ์ดี', proc:'Meso Fat คาง · 05 ก.ย.', status:'complant' },
+  { patient:'คุณ ธัญวลัย ศรีสมบัติ', proc:'IV Drip Glutathione · 06 ก.ย.', status:'complant' },
+  { patient:'คุณ อรณิชา พูนสิน', proc:'ร้อยไหม 20 เส้น · 28 ส.ค.', status:'happy' },
+  { patient:'คุณ เมธาวี จันทร์เพ็ง', proc:'Laser Toning หน้า · 31 ส.ค.', status:'review' }
+];
+
+const timelineByIndex = {
+  0: timeline, // ณัฐริกา — Filler ร่องแก้ม: happy → complant → resolved → happy → review (เคสตัวอย่างหลัก)
+  2: [
+    { date:'02 ก.ย. 2569', time:'16:40', kind:'happy', title:'ทำหัตถการเสร็จ — สถานะเริ่มต้น Happy', by:'สมฤทัย (พนักงาน)', detail:'Botox กราม 50 u โดย น.พ. ธนกฤต', hasMedia:false },
+    { date:'03 ก.ย. 2569', time:'16:40', kind:'complant', title:'เปิดเคส Complant', by:'สมฤทัย (พนักงาน)', detail:'ลูกค้าแจ้งว่ายิ้มแล้วมุมปากไม่เท่ากัน อยากให้หมอตรวจดู', hasMedia:false },
+  ],
+  3: [
+    { date:'01 ก.ย. 2569', time:'11:05', kind:'happy', title:'ทำหัตถการเสร็จ — สถานะเริ่มต้น Happy', by:'ปิยะ (พนักงาน)', detail:'Laser Pico หน้า โดย พ.ญ. ปวีณา', hasMedia:false },
+    { date:'01 ก.ย. 2569', time:'11:05', kind:'complant', title:'เปิดเคส Complant', by:'ปิยะ (พนักงาน)', detail:'มีรอยแดงเป็นจุด ๆ บริเวณโหนกแก้มยังไม่หายค่ะ', hasMedia:true, mediaLabel:'LINE 01' },
+  ],
+  4: [
+    { date:'05 ก.ย. 2569', time:'09:20', kind:'happy', title:'ทำหัตถการเสร็จ — สถานะเริ่มต้น Happy', by:'ปิยะ (พนักงาน)', detail:'Meso Fat คาง โดย น.พ. ธนกฤต', hasMedia:false },
+    { date:'05 ก.ย. 2569', time:'09:20', kind:'complant', title:'เปิดเคส Complant', by:'ปิยะ (พนักงาน)', detail:'คางบวมมากกว่าที่หมอบอกไว้ ลูกค้ากังวลว่าผิดปกติ', hasMedia:false },
+  ],
+  5: [
+    { date:'06 ก.ย. 2569', time:'08:35', kind:'happy', title:'ทำหัตถการเสร็จ — สถานะเริ่มต้น Happy', by:'ปิยะ (พนักงาน)', detail:'IV Drip Glutathione', hasMedia:false },
+    { date:'06 ก.ย. 2569', time:'08:35', kind:'complant', title:'เปิดเคส Complant', by:'ปิยะ (พนักงาน)', detail:'มีรอยช้ำบริเวณที่แทงเข็ม ปวดเล็กน้อย', hasMedia:false },
+  ],
+  6: [
+    { date:'28 ส.ค. 2569', time:'10:00', kind:'happy', title:'ทำหัตถการเสร็จ — สถานะเริ่มต้น Happy', by:'สมฤทัย (พนักงาน)', detail:'ร้อยไหม 20 เส้น โดย พ.ญ. ปวีณา', hasMedia:false },
+    { date:'02 ก.ย. 2569', time:'14:55', kind:'complant', title:'เปิดเคส Complant', by:'สมฤทัย (พนักงาน)', detail:'คลำเจอปุ่มแข็งใต้ผิวบริเวณแก้มขวา', hasMedia:false },
+    { date:'03 ก.ย. 2569', time:'10:20', kind:'happy', title:'ปิดเคส — กลับเป็น Happy', by:'สมฤทัย (พนักงาน)', detail:'แพทย์ตรวจแล้วเป็นภาวะปกติหลังร้อยไหม อธิบายให้ลูกค้าเข้าใจ', hasMedia:false },
+  ],
+  7: [
+    { date:'31 ส.ค. 2569', time:'13:10', kind:'happy', title:'ทำหัตถการเสร็จ — สถานะเริ่มต้น Happy', by:'สมฤทัย (พนักงาน)', detail:'Laser Toning หน้า โดย น.พ. ธนกฤต', hasMedia:false },
+    { date:'02 ก.ย. 2569', time:'09:00', kind:'review', title:'บันทึก Review จาก LINE', by:'สมฤทัย (พนักงาน)', detail:'★★★★★ "หน้าใสขึ้นจริง หมออธิบายละเอียด"', hasMedia:false },
+  ],
+};
+
+/* ======================= STATE ======================= */
+const state = {
+  screen: 'login',
+  loginRole: 'staff',
+  role: 'staff',
+  inputMode: 'manual',
+  normalTab: 'all',
+  normalSearch: '',
+  normalSelected: {},
+  custSearch: '',
+  custSort: { field: 'date', dir: 'desc' },
+  custEditing: null,
+  custDeleting: null,
+  custHistoryFor: null,
+  trackFilter: 'ทั้งหมด',
+  trackIndex: 0,
+  reviewPicked: 0,
+  scope: 'summary',
+  format: 'PDF',
+  fieldsOff: {},
+  closingCase: null,
+};
+
+const STATUS_META = {
+  happy:     { label:'Happy',     color:'var(--happy)',     bg:'var(--happy-bg)',     text:'var(--happy)' },
+  complant:  { label:'Complant',  color:'var(--complant)',  bg:'var(--complant-bg)',  text:'var(--complant-text)' },
+  review:    { label:'Review',    color:'var(--review)',    bg:'var(--review-bg)',    text:'var(--review-text)' },
+  unclassified: { label:'ยังไม่กรอง', color:'#DCEAE5', bg:'#F3FAF8', text:'var(--text-sub)' },
+};
+
+function esc(s){ return String(s).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c])); }
+function go(screen){ state.screen = screen; render(); window.scrollTo(0,0); }
+function setRole(r){ state.role = r; render(); }
+function showToast(msg){
+  let t = document.getElementById('toast');
+  if(!t){ t = document.createElement('div'); t.id='toast'; t.className='toast'; document.body.appendChild(t); }
+  t.textContent = msg;
+  t.classList.add('show');
+  clearTimeout(window.__toastTimer);
+  window.__toastTimer = setTimeout(()=>t.classList.remove('show'), 2200);
+}
+
+/* ======================= SHELL ======================= */
+function roleLabel(r){ return {staff:'พนักงาน', doctor:'แพทย์', admin:'ผู้ดูแลระบบ'}[r]; }
+function userName(r){ return r==='doctor' ? 'พ.ญ. ปวีณา ศรีวัฒน์' : r==='admin' ? 'วีรภัทร (แอดมิน)' : 'สมฤทัย พงษ์พานิช'; }
+function userInitial(r){ return r==='doctor' ? 'ป' : r==='admin' ? 'ว' : 'ส'; }
+
+const NAV = [
+  {id:'dashboard', label:'Dashboard'},
+  {id:'input', label:'Input'},
+  {id:'normal', label:'กรองข้อมูล', count:()=>customers.filter(c=>c.status==='unclassified').length},
+  {id:'customers', label:'ลูกค้าทั้งหมด'},
+  {id:'complant', label:'Complant', count:()=>complants.length},
+  {id:'review', label:'Review'},
+  {id:'tracking', label:'Tracking'},
+  {id:'export', label:'Export'},
+];
+
+const PAGE_META = {
+  dashboard: ['ภาพรวม', ()=> 'สวัสดี ' + (state.role==='doctor' ? 'คุณหมอ' : 'คุณสมฤทัย'), ()=> state.role==='doctor' ? 'แสดงเฉพาะเคสที่คุณเกี่ยวข้อง' : 'สรุปสถานะหัตถการทั้งคลินิก และเคสที่ต้องติดตามวันนี้'],
+  input: ['บันทึกข้อมูล', ()=>'Input — บันทึกข้อมูลลูกค้า', ()=>'กรอกทีละรายหรือนำเข้าเป็นชุดจากไฟล์ CSV · หัตถการทุกรายการจะเริ่มที่สถานะ Happy'],
+  normal: ['บันทึกข้อมูล', ()=>'กรองข้อมูล', ()=>'ระบบแนะนำสถานะเบื้องต้นให้อัตโนมัติหลังนำเข้าข้อมูล — ผู้ใช้ตรวจสอบและกดยืนยันประเภทเคส (Happy / Complant / Review) ก่อนเข้าสู่ระบบติดตาม'],
+  customers: ['ฐานข้อมูล', ()=>'ลูกค้าทั้งหมด', ()=>'ดู ค้นหา แก้ไข หรือลบข้อมูลลูกค้าในระบบ'],
+  complant: ['ติดตามเคส', ()=>'Complant', ()=>'เคสที่ลูกค้าแจ้งเข้ามาทาง LINE OA และยังไม่ถูกปิด — พนักงานคัดลอกข้อความและรูปเข้าระบบเอง'],
+  review: ['ติดตามเคส', ()=>'Review', ()=>'บันทึกรีวิวที่ลูกค้าส่งมาทาง LINE สำหรับหัตถการที่ไม่มี complant ค้าง'],
+  tracking: ['ติดตามเคส', ()=>'Tracking', ()=>'ไทม์ไลน์การเปลี่ยนสถานะของหัตถการแต่ละรายการ พร้อมผู้บันทึกและหลักฐาน'],
+  export: ['รายงาน', ()=>'Export', ()=>'เลือกขอบเขต คอลัมน์ และรูปแบบไฟล์ก่อนดาวน์โหลด'],
+};
+
+function renderShell(bodyHtml){
+  const meta = PAGE_META[state.screen];
+  const navHtml = NAV.map(item=>{
+    const active = state.screen===item.id;
+    const count = item.count ? item.count() : null;
+    return `<button class="nav-item ${active?'active':''}" data-nav="${item.id}">
+      <span class="nav-dot"></span>${esc(item.label)}
+      ${count ? `<span class="nav-count">${count}</span>` : ''}
+    </button>`;
+  }).join('');
+
+  return `
+  <div class="app-shell">
+    <aside class="sidebar">
+      <div class="logo-row">
+        <div class="logo-mark">อ</div>
+        <div>
+          <div class="logo-name">Aurea Clinic</div>
+          <div class="logo-sub">ระบบบันทึกและติดตามการรักษา</div>
+        </div>
+      </div>
+      <nav class="mainnav">
+        <div class="nav-label">เมนู</div>
+        ${navHtml}
+      </nav>
+      <div class="sidebar-bottom">
+        <div class="legend-box">
+          <div class="legend-title">สถานะหัตถการ</div>
+          <div class="legend-item"><span class="dot" style="width:9px;height:9px;background:var(--happy)"></span>Happy — ปกติ</div>
+          <div class="legend-item"><span class="dot" style="width:9px;height:9px;background:var(--complant)"></span>Complant — ต้องแก้ไข</div>
+          <div class="legend-item"><span class="dot" style="width:9px;height:9px;background:var(--review)"></span>Review — มีรีวิว</div>
+        </div>
+        <div class="user-row">
+          <div class="avatar">${userInitial(state.role)}</div>
+          <div style="min-width:0">
+            <div class="user-name">${esc(userName(state.role))}</div>
+            <div class="user-role">${esc(roleLabel(state.role))}</div>
+          </div>
+          <button class="logout-btn" data-action="logout">ออก</button>
+        </div>
+      </div>
+    </aside>
+    <main class="content">
+      <header class="pagehead">
+        <div style="min-width:0">
+          <div class="crumb">${esc(meta[0])}</div>
+          <h1 class="pagetitle">${esc(meta[1]())}</h1>
+          <p class="pagedesc">${esc(meta[2]())}</p>
+        </div>
+        <div class="head-right">
+          <div class="role-switch">
+            <span style="font-size:11.5px;color:var(--text-sub)">มุมมองสิทธิ์</span>
+            <select id="roleSelect">
+              <option value="staff" ${state.role==='staff'?'selected':''}>พนักงาน</option>
+              <option value="doctor" ${state.role==='doctor'?'selected':''}>แพทย์</option>
+              <option value="admin" ${state.role==='admin'?'selected':''}>ผู้ดูแลระบบ</option>
+            </select>
+          </div>
+          <div class="today-chip">วันนี้ 08 ก.ย. 2569</div>
+        </div>
+      </header>
+      ${bodyHtml}
+    </main>
+  </div>`;
+}
+
+/* ======================= LOGIN ======================= */
+function renderLogin(){
+  const loginRoles = [['staff','พนักงาน'],['doctor','แพทย์'],['admin','ผู้ดูแลระบบ']];
+  return `
+  <div style="min-height:100vh;display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);background:#fff">
+    <div style="display:flex;align-items:center;justify-content:center;padding:40px">
+      <div style="width:min(380px,100%)">
+        <div style="display:flex;align-items:center;gap:11px;margin-bottom:30px">
+          <div class="logo-mark" style="width:38px;height:38px;font-size:16px">อ</div>
+          <div>
+            <div style="font-family:Prompt,sans-serif;font-weight:600;font-size:16px">Aurea Clinic</div>
+            <div style="font-size:11.5px;color:var(--text-sub)">ระบบบันทึกและติดตามการรักษา</div>
+          </div>
+        </div>
+        <h1 style="margin:0;font-family:Prompt,sans-serif;font-weight:600;font-size:26px">เข้าสู่ระบบ</h1>
+        <p style="margin:8px 0 24px;font-size:13px;color:var(--text-sub)">ใช้บัญชีที่ผู้ดูแลระบบสร้างให้</p>
+        <div style="display:flex;flex-direction:column;gap:13px">
+          <label style="display:flex;flex-direction:column;gap:6px"><span style="font-size:11.5px;color:var(--text-sub)">ชื่อผู้ใช้</span><input placeholder="username"></label>
+          <label style="display:flex;flex-direction:column;gap:6px"><span style="font-size:11.5px;color:var(--text-sub)">รหัสผ่าน</span><input type="password" placeholder="••••••••"></label>
+          <div>
+            <div style="font-size:11.5px;color:var(--text-sub);margin-bottom:8px">เข้าใช้งานในบทบาท</div>
+            <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:8px">
+              ${loginRoles.map(([id,label])=>`
+                <button data-action="pickLoginRole" data-role="${id}" style="text-align:center;border:1px solid ${state.loginRole===id?'var(--primary)':'var(--border)'};background:${state.loginRole===id?'var(--card)':'#fff'};border-radius:10px;padding:11px 6px;font-family:Prompt,sans-serif;font-weight:${state.loginRole===id?'500':'400'};font-size:12.5px;color:${state.loginRole===id?'var(--text)':'var(--text-sub)'};cursor:pointer">${label}</button>`).join('')}
+            </div>
+          </div>
+          <button class="btn-primary" style="margin-top:6px" data-action="doLogin">เข้าสู่ระบบ</button>
+          <div style="font-size:11.5px;color:var(--text-sub);text-align:center">ลืมรหัสผ่าน? ติดต่อผู้ดูแลระบบของคลินิก</div>
+        </div>
+      </div>
+    </div>
+    <div style="background:var(--card);border-left:1px solid var(--border);display:flex;flex-direction:column;justify-content:center;gap:22px;padding:56px">
+      <div style="font-family:Prompt,sans-serif;font-weight:600;font-size:20px;line-height:1.5;max-width:22ch">บันทึกหัตถการ ติดตามเคส และดูแลลูกค้าได้ครบในที่เดียว</div>
+      <div style="display:flex;flex-direction:column;gap:10px;max-width:340px">
+        <div style="background:#fff;border:1px solid var(--border);border-radius:12px;padding:14px 16px;display:flex;align-items:center;gap:11px"><span class="dot" style="width:9px;height:9px;background:var(--happy)"></span><span style="font-size:13px">Happy — หัตถการที่เรียบร้อย</span></div>
+        <div style="background:#fff;border:1px solid var(--complant-border);border-radius:12px;padding:14px 16px;display:flex;align-items:center;gap:11px"><span class="dot" style="width:9px;height:9px;background:var(--complant)"></span><span style="font-size:13px">Complant — ต้องตรวจสอบและแก้ไข</span></div>
+        <div style="background:#fff;border:1px solid var(--review-border);border-radius:12px;padding:14px 16px;display:flex;align-items:center;gap:11px"><span class="dot" style="width:9px;height:9px;background:var(--review)"></span><span style="font-size:13px">Review — รีวิวจากลูกค้าผ่าน LINE</span></div>
+      </div>
+      <div style="font-size:11.5px;color:var(--text-sub);line-height:1.7;max-width:38ch">สถานะผูกกับหัตถการแต่ละรายการ ลูกค้า 1 ครั้งที่มาทำ 3 หัตถการ จะติดตามแยกกันได้ 3 สถานะ</div>
+    </div>
+  </div>`;
+}
+
+/* ======================= DASHBOARD (with charts) ======================= */
+function renderDashboard(){
+  const total = customers.length;
+  const happyCount = customers.filter(c=>c.status==='happy').length;
+  const complantCount = customers.filter(c=>c.status==='complant').length;
+  const reviewCount = customers.filter(c=>c.status==='review').length;
+  const unclassifiedCount = customers.filter(c=>c.status==='unclassified').length;
+
+  const byDoctor = {};
+  customers.forEach(c=>{ byDoctor[c.doctor] = (byDoctor[c.doctor]||0)+1; });
+  const doctorEntries = Object.entries(byDoctor).sort((a,b)=>b[1]-a[1]);
+  const maxDoctorCount = Math.max(...doctorEntries.map(e=>e[1]), 1);
+
+  const statusBarTotal = happyCount + complantCount + reviewCount + unclassifiedCount || 1;
+
+  return `
+  <div style="display:flex;flex-direction:column;gap:20px">
+    <div class="grid-auto" style="grid-template-columns:repeat(auto-fit,minmax(210px,1fr))">
+      <div class="stat-card" style="background:var(--happy-bg)">
+        <div class="stat-label" style="color:var(--text-sub)"><span class="dot" style="width:9px;height:9px;background:var(--happy)"></span>Happy</div>
+        <div class="stat-num">${happyCount}</div>
+        <div class="stat-sub" style="color:var(--text-sub)">หัตถการสถานะปกติ</div>
+      </div>
+      <div class="stat-card" style="background:var(--complant-bg);border-color:var(--complant-border)">
+        <div class="stat-label" style="color:var(--complant-text)"><span class="dot" style="width:9px;height:9px;background:var(--complant)"></span>Complant</div>
+        <div class="stat-num" style="color:var(--complant-text)">${complantCount}</div>
+        <div class="stat-sub" style="color:var(--complant-text)">ยังไม่ปิดเคส · เก่าสุด 5 วัน</div>
+      </div>
+      <div class="stat-card" style="background:var(--review-bg);border-color:var(--review-border)">
+        <div class="stat-label" style="color:var(--review-text)"><span class="dot" style="width:9px;height:9px;background:var(--review)"></span>Review</div>
+        <div class="stat-num" style="color:var(--review-text)">${reviewCount}</div>
+        <div class="stat-sub" style="color:var(--review-text)">รีวิวที่บันทึกจาก LINE</div>
+      </div>
+      <div class="stat-card">
+        <div style="font-size:12.5px;color:var(--text-sub)">นัดหมายวันนี้</div>
+        <div class="stat-num">9</div>
+        <div class="stat-sub" style="color:var(--text-sub)">เข้ารับแล้ว 4 · รอ 5</div>
+      </div>
+    </div>
+
+    <div class="grid-auto" style="grid-template-columns:repeat(auto-fit,minmax(300px,1fr));align-items:start">
+      <section class="card" style="padding:18px">
+        <h2 style="margin:0 0 4px;font-family:Prompt,sans-serif;font-weight:600;font-size:15px">สัดส่วนสถานะหัตถการ</h2>
+        <p style="margin:0 0 16px;font-size:11.5px;color:var(--text-sub)">จากทั้งหมด ${total} เคสในระบบ</p>
+        <div style="display:flex;height:14px;border-radius:8px;overflow:hidden;background:var(--card)">
+          <div style="width:${happyCount/statusBarTotal*100}%;background:var(--happy)" title="Happy ${happyCount}"></div>
+          <div style="width:${complantCount/statusBarTotal*100}%;background:var(--complant)" title="Complant ${complantCount}"></div>
+          <div style="width:${reviewCount/statusBarTotal*100}%;background:var(--review)" title="Review ${reviewCount}"></div>
+          <div style="width:${unclassifiedCount/statusBarTotal*100}%;background:var(--border)" title="ยังไม่กรอง ${unclassifiedCount}"></div>
+        </div>
+        <div style="display:flex;flex-wrap:wrap;gap:14px;margin-top:14px;font-size:12px;color:var(--text-sub)">
+          <div style="display:flex;align-items:center;gap:6px"><span class="dot" style="width:9px;height:9px;background:var(--happy)"></span>Happy ${happyCount}</div>
+          <div style="display:flex;align-items:center;gap:6px"><span class="dot" style="width:9px;height:9px;background:var(--complant)"></span>Complant ${complantCount}</div>
+          <div style="display:flex;align-items:center;gap:6px"><span class="dot" style="width:9px;height:9px;background:var(--review)"></span>Review ${reviewCount}</div>
+          <div style="display:flex;align-items:center;gap:6px"><span class="dot" style="width:9px;height:9px;background:var(--border)"></span>ยังไม่กรอง ${unclassifiedCount}</div>
+        </div>
+      </section>
+
+      <section class="card" style="padding:18px">
+        <h2 style="margin:0 0 4px;font-family:Prompt,sans-serif;font-weight:600;font-size:15px">จำนวนเคสต่อแพทย์</h2>
+        <p style="margin:0 0 16px;font-size:11.5px;color:var(--text-sub)">นับจากหัตถการทั้งหมดในระบบ</p>
+        <div style="display:flex;flex-direction:column;gap:11px">
+          ${doctorEntries.map(([doc,count])=>`
+            <div>
+              <div style="display:flex;justify-content:space-between;font-size:12.5px;margin-bottom:5px">
+                <span style="font-weight:500">${esc(doc)}</span>
+                <span style="color:var(--text-sub)">${count} เคส</span>
+              </div>
+              <div style="height:9px;border-radius:5px;background:var(--card);overflow:hidden">
+                <div style="height:100%;width:${count/maxDoctorCount*100}%;background:var(--primary);border-radius:5px"></div>
+              </div>
+            </div>`).join('')}
+        </div>
+      </section>
+    </div>
+
+    <div class="grid-auto" style="grid-template-columns:repeat(auto-fit,minmax(340px,1fr));align-items:start">
+      <section class="card" style="overflow:hidden">
+        <div style="display:flex;align-items:center;gap:12px;padding:16px 18px;border-bottom:1px solid var(--border)">
+          <h2 style="margin:0;font-family:Prompt,sans-serif;font-weight:600;font-size:15px">เคส Complant ที่ต้องติดตาม</h2>
+          <span class="pill" style="color:var(--complant-text);background:var(--complant-bg)">${complants.length} เคส</span>
+          <div style="margin-left:auto;font-size:12.5px;color:var(--primary-deep);cursor:pointer" data-nav="complant">ดูทั้งหมด →</div>
+        </div>
+        <table class="datatable">
+          <thead><tr><th>ลูกค้า</th><th>หัตถการ</th><th>แพทย์</th><th>แจ้งเมื่อ</th><th>สถานะ</th></tr></thead>
+          <tbody>
+            ${complants.map(c=>`
+              <tr style="cursor:pointer" data-nav="complant">
+                <td style="font-weight:500;color:var(--text)">${esc(c.patient)}</td>
+                <td>${esc(c.proc)}</td>
+                <td>${esc(c.doctor)}</td>
+                <td>${esc(c.date)}</td>
+                <td><span class="pill" style="background:var(--complant-bg);color:var(--complant-text);white-space:nowrap">Complant · ${esc(c.age)}</span></td>
+              </tr>`).join('')}
+          </tbody>
+        </table>
+      </section>
+
+      <section class="card" style="padding:18px">
+        <h2 style="margin:0 0 14px;font-family:Prompt,sans-serif;font-weight:600;font-size:15px">นัดหมายวันนี้</h2>
+        <div style="display:flex;flex-direction:column;gap:9px">
+          ${[
+            {time:'09:30',patient:'คุณ อรณิชา พูนสิน',proc:'ติดตามผลร้อยไหม',s:'เข้ารับแล้ว'},
+            {time:'10:15',patient:'คุณ เมธาวี จันทร์เพ็ง',proc:'Laser Toning',s:'เข้ารับแล้ว'},
+            {time:'13:00',patient:'คุณ ศิรประภา วงศ์ดี',proc:'ประเมินอาการบวม',s:'รอ'},
+            {time:'14:30',patient:'คุณ ปวริศา ธนสาร',proc:'Botox หน้าผาก',s:'รอ'},
+            {time:'16:00',patient:'คุณ ชญาดา เกียรติกุล',proc:'ปรึกษา Filler ใต้ตา',s:'รอ'}
+          ].map(a=>`
+            <div style="display:flex;align-items:center;gap:12px;padding:11px 13px;border:1px solid var(--border);border-radius:10px">
+              <div style="font-family:Prompt,sans-serif;font-weight:500;font-size:13px;color:var(--primary-deep);min-width:44px">${a.time}</div>
+              <div style="min-width:0">
+                <div style="font-size:12.5px;font-weight:500">${esc(a.patient)}</div>
+                <div style="font-size:11.5px;color:var(--text-sub)">${esc(a.proc)}</div>
+              </div>
+              <div style="margin-left:auto;font-size:11px;color:var(--text-sub);white-space:nowrap">${a.s}</div>
+            </div>`).join('')}
+        </div>
+      </section>
+    </div>
+  </div>`;
+}
+
+/* ======================= INPUT ======================= */
+function renderInput(){
+  const manualOn = state.inputMode==='manual';
+  return `
+  <div style="display:flex;flex-direction:column;gap:18px">
+    <div class="tab-switch">
+      <button class="tab-btn ${manualOn?'active':''}" data-action="setInputMode" data-mode="manual">กรอกแบบ manual</button>
+      <button class="tab-btn ${!manualOn?'active':''}" data-action="setInputMode" data-mode="csv">นำเข้าไฟล์ CSV</button>
+    </div>
+
+    ${manualOn ? `
+    <div class="grid-auto" style="grid-template-columns:repeat(auto-fit,minmax(330px,1fr));align-items:start">
+      <div style="display:flex;flex-direction:column;gap:16px">
+        <section class="card" style="padding:20px">
+          <div style="display:flex;align-items:center;gap:9px;margin-bottom:16px">
+            <span style="font-family:Prompt,sans-serif;font-size:11px;font-weight:500;background:var(--mint);color:var(--primary-deep);border-radius:6px;padding:3px 7px">1</span>
+            <h2 style="margin:0;font-family:Prompt,sans-serif;font-weight:600;font-size:15px">ข้อมูลลูกค้า</h2>
+          </div>
+          <div class="grid-auto" style="grid-template-columns:repeat(auto-fit,minmax(200px,1fr))">
+            ${[
+              ['ชื่อ-นามสกุล','ณัฐริกา สุวรรณโชติ',''],['เบอร์โทร','081-234-5678',''],
+              ['ข้อมูลติดต่ออื่น (LINE ID)','@nattarika',''],['ที่อยู่','','บ้านเลขที่ / ถนน / เขต / จังหวัด'],
+              ['วันเดือนปีเกิด','14 มี.ค. 2537',''],['อายุ','32',''],
+              ['อาชีพ','','เช่น พนักงานบริษัท'],['เชื้อชาติ','ไทย',''],['สัญชาติ','ไทย',''],
+              ['ประเภทลูกค้า','ลูกค้าเก่า',''],['สิทธิประกันสังคม/สวัสดิการ','','ไม่มี / ระบุสิทธิ'],
+              ['แพทย์ผู้ดูแล','พ.ญ. ปวีณา ศรีวัฒน์',''],['พนักงานขาย (Sale)','ปิยะ ชูเกียรติ','']
+            ].map(([label,value,ph])=>`
+              <label style="display:flex;flex-direction:column;gap:6px">
+                <span style="font-size:11.5px;color:var(--text-sub)">${esc(label)}</span>
+                <input value="${esc(value)}" placeholder="${esc(ph)}">
+              </label>`).join('')}
+          </div>
+        </section>
+
+        <section class="card" style="padding:20px">
+          <div style="display:flex;align-items:center;gap:9px;margin-bottom:14px">
+            <span style="font-family:Prompt,sans-serif;font-size:11px;font-weight:500;background:var(--mint);color:var(--primary-deep);border-radius:6px;padding:3px 7px">2</span>
+            <h2 style="margin:0;font-family:Prompt,sans-serif;font-weight:600;font-size:15px">รายการหัตถการ</h2>
+            <span style="font-size:11.5px;color:var(--text-sub)">แต่ละรายการมีสถานะเคสแยกกัน</span>
+          </div>
+          <div style="display:flex;flex-direction:column;gap:10px">
+            ${[
+              {name:'Filler ร่องแก้ม', area:'ร่องแก้มซ้าย-ขวา', qty:'2 cc', doctor:'พ.ญ. ปวีณา'},
+              {name:'Botox หน้าผาก', area:'หน้าผาก', qty:'30 u', doctor:'พ.ญ. ปวีณา'},
+              {name:'Laser Toning', area:'ทั้งใบหน้า', qty:'1 ครั้ง', doctor:'น.พ. ธนกฤต'}
+            ].map(p=>`
+              <div style="display:grid;grid-template-columns:minmax(0,2fr) minmax(0,1.3fr) 90px minmax(0,1.3fr);gap:10px;align-items:center;background:var(--card);border:1px solid var(--border);border-radius:10px;padding:11px 13px">
+                <div style="font-size:13px;font-weight:500">${esc(p.name)}</div>
+                <div style="font-size:12.5px;color:var(--text-sub)">บริเวณ · ${esc(p.area)}</div>
+                <div style="font-size:12.5px;color:var(--text-sub)">${esc(p.qty)}</div>
+                <div style="font-size:12.5px;color:var(--text-sub)">แพทย์ · ${esc(p.doctor)}</div>
+              </div>`).join('')}
+            <button style="display:flex;align-items:center;justify-content:center;gap:7px;border:1px dashed var(--border);border-radius:10px;padding:11px;font-size:12.5px;color:var(--primary-deep);cursor:pointer;background:none">+ เพิ่มหัตถการจาก Procedure Catalog</button>
+          </div>
+        </section>
+
+        <section class="card" style="padding:20px">
+          <div style="display:flex;align-items:center;gap:9px;margin-bottom:14px">
+            <span style="font-family:Prompt,sans-serif;font-size:11px;font-weight:500;background:var(--mint);color:var(--primary-deep);border-radius:6px;padding:3px 7px">3</span>
+            <h2 style="margin:0;font-family:Prompt,sans-serif;font-weight:600;font-size:15px">รูปภาพจากช่างภาพ (Before)</h2>
+          </div>
+          <div class="grid-auto" style="grid-template-columns:repeat(auto-fill,minmax(140px,1fr))">
+            <div class="thumb" style="aspect-ratio:3/4"><span class="thumb-label">before / front</span></div>
+            <div class="thumb" style="aspect-ratio:3/4"><span class="thumb-label">before / left 45°</span></div>
+            <div class="thumb" style="aspect-ratio:3/4"><span class="thumb-label">before / right 45°</span></div>
+            <button class="thumb-add" style="aspect-ratio:3/4;flex-direction:column;gap:5px"><span>+</span><span style="font-size:11.5px;color:var(--text-sub)">อัปโหลดรูป</span></button>
+          </div>
+        </section>
+      </div>
+
+      <aside style="display:flex;flex-direction:column;gap:16px">
+        <section class="card" style="background:var(--card);padding:18px">
+          <h2 style="margin:0 0 13px;font-family:Prompt,sans-serif;font-weight:600;font-size:14px">นัดหมายครั้งถัดไป</h2>
+          <div style="display:flex;flex-direction:column;gap:11px">
+            <label style="display:flex;flex-direction:column;gap:6px"><span style="font-size:11.5px;color:var(--text-sub)">วันที่</span><input value="18 ก.ย. 2569" style="background:#fff"></label>
+            <label style="display:flex;flex-direction:column;gap:6px"><span style="font-size:11.5px;color:var(--text-sub)">เวลา</span><input value="14:30" style="background:#fff"></label>
+            <label style="display:flex;flex-direction:column;gap:6px"><span style="font-size:11.5px;color:var(--text-sub)">หมายเหตุ</span><textarea rows="3" placeholder="เช่น ติดตามผลหลังทำ 2 สัปดาห์" style="background:#fff;resize:vertical"></textarea></label>
+          </div>
+        </section>
+        <section class="card" style="padding:18px">
+          <div style="font-size:11.5px;color:var(--text-sub);line-height:1.65">เมื่อบันทึก หัตถการทุกรายการจะได้สถานะเริ่มต้น <b style="color:var(--primary-deep)">Happy</b> โดยอัตโนมัติ</div>
+          <div style="display:flex;gap:9px;margin-top:14px">
+            <button class="btn-primary" style="flex:1" data-action="saveInput">บันทึกข้อมูล</button>
+            <button class="btn-outline">ล้าง</button>
+          </div>
+        </section>
+      </aside>
+    </div>` : `
+    <div class="grid-auto" style="grid-template-columns:repeat(auto-fit,minmax(330px,1fr));align-items:start">
+      <section class="card" style="padding:20px">
+        <div style="border:1px dashed var(--primary);background:var(--card);border-radius:12px;padding:34px;text-align:center;cursor:pointer" data-action="simulateCsv">
+          <div style="font-family:Prompt,sans-serif;font-weight:600;font-size:15px">ลากไฟล์ CSV มาวางที่นี่</div>
+          <div style="font-size:12.5px;color:var(--text-sub);margin-top:6px">หรือ <span style="color:var(--primary-deep)">เลือกไฟล์จากเครื่อง</span> · รองรับ .csv ขนาดไม่เกิน 5 MB</div>
+        </div>
+        <div style="display:flex;align-items:center;gap:10px;margin:18px 0 12px">
+          <h2 style="margin:0;font-family:Prompt,sans-serif;font-weight:600;font-size:14px">จับคู่คอลัมน์</h2>
+          <span style="font-size:11.5px;color:var(--text-sub)">patients_sep2026.csv · 34 แถว</span>
+          <span class="pill" style="margin-left:auto;background:var(--complant-bg);color:var(--complant-text)">2 แถวต้องตรวจสอบ</span>
+        </div>
+        <div style="display:flex;flex-direction:column;gap:8px">
+          ${[
+            ['full_name','ชื่อ-นามสกุล'],['phone','เบอร์โทร'],['birthdate','วันเดือนปีเกิด'],
+            ['occupation','อาชีพ'],['doctor','แพทย์ผู้ดูแล'],['sale_person','พนักงานขาย (Sale)'],['procedures','รายการหัตถการ']
+          ].map(([src,dest])=>`
+            <div style="display:grid;grid-template-columns:minmax(0,1fr) 22px minmax(0,1fr);gap:10px;align-items:center;border:1px solid var(--border);border-radius:10px;padding:10px 13px">
+              <div style="font-family:ui-monospace,Menlo,monospace;font-size:12px;color:var(--text-sub)">${esc(src)}</div>
+              <div style="color:var(--text-faint);text-align:center">→</div>
+              <div style="font-size:12.5px;font-weight:500">${esc(dest)}</div>
+            </div>`).join('')}
+        </div>
+      </section>
+      <aside class="card" style="padding:18px">
+        <h2 style="margin:0 0 12px;font-family:Prompt,sans-serif;font-weight:600;font-size:14px">สรุปก่อนนำเข้า</h2>
+        <div style="display:flex;flex-direction:column;gap:9px;font-size:12.5px;color:var(--text-sub)">
+          <div style="display:flex;justify-content:space-between"><span>ลูกค้าใหม่</span><b style="color:var(--text)">29</b></div>
+          <div style="display:flex;justify-content:space-between"><span>ลูกค้าซ้ำ (อัปเดต)</span><b style="color:var(--text)">3</b></div>
+          <div style="display:flex;justify-content:space-between"><span>ข้อมูลไม่ครบ</span><b style="color:var(--complant-text)">2</b></div>
+        </div>
+        <button class="btn-primary" style="width:100%;margin-top:16px" data-action="doCsvImport">นำเข้า 32 รายการ → ไปที่ Normal</button>
+      </aside>
+    </div>`}
+  </div>`;
+}
+
+/* ======================= NORMAL (filter/verify + search) ======================= */
+function renderNormal(){
+  const tabs = [
+    {id:'all', label:'ทั้งหมด'},
+    {id:'unclassified', label:'รอกรอง'},
+    {id:'classified', label:'กรองแล้ว'},
+  ];
+  let rows = customers.slice();
+  const q = state.normalSearch.trim().toLowerCase();
+  if(q){
+    rows = rows.filter(c => c.name.toLowerCase().includes(q) || c.hn.toLowerCase().includes(q) || c.doctor.toLowerCase().includes(q));
+  }
+  if(state.normalTab==='unclassified') rows = rows.filter(c=>c.status==='unclassified');
+  if(state.normalTab==='classified') rows = rows.filter(c=>c.status!=='unclassified');
+
+  const totalAll = customers.length;
+  const totalUnclassified = customers.filter(c=>c.status==='unclassified').length;
+  const totalClassified = totalAll - totalUnclassified;
+  const confirmedCount = customers.filter(c=>c.status!=='unclassified').length;
+
+  return `
+  <section class="card" style="overflow:hidden">
+    <div style="display:flex;align-items:center;gap:14px;flex-wrap:wrap;padding:16px 18px;border-bottom:1px solid var(--border)">
+      <h2 style="margin:0;font-family:Prompt,sans-serif;font-weight:600;font-size:15px">กรองข้อมูล — ยืนยันประเภทเคส</h2>
+      <div style="margin-left:auto;display:flex;gap:9px">
+        <div class="search-input" style="width:220px">
+          <span class="search-icon">🔍</span>
+          <input id="normalSearchInput" placeholder="ค้นหาชื่อ, HN, หรือแพทย์..." value="${esc(state.normalSearch)}">
+        </div>
+        <button class="btn-outline" style="white-space:nowrap">ฟิลเตอร์</button>
+      </div>
+    </div>
+
+    <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:1px;background:var(--border)">
+      <div style="background:#fff;padding:14px 18px;text-align:center">
+        <div style="font-size:11.5px;color:var(--text-sub)">ทั้งหมด</div>
+        <div style="font-family:Prompt,sans-serif;font-weight:600;font-size:22px;margin-top:4px">${totalAll}</div>
+      </div>
+      <div style="background:#fff;padding:14px 18px;text-align:center">
+        <div style="font-size:11.5px;color:var(--text-sub)">รอกรอง</div>
+        <div style="font-family:Prompt,sans-serif;font-weight:600;font-size:22px;margin-top:4px;color:var(--complant-text)">${totalUnclassified}</div>
+      </div>
+      <div style="background:#fff;padding:14px 18px;text-align:center">
+        <div style="font-size:11.5px;color:var(--text-sub)">กรองแล้ว</div>
+        <div style="font-family:Prompt,sans-serif;font-weight:600;font-size:22px;margin-top:4px;color:var(--primary-deep)">${totalClassified}</div>
+      </div>
+    </div>
+
+    <div style="display:flex;gap:6px;padding:14px 18px;border-bottom:1px solid var(--border)">
+      ${tabs.map(t=>`<button class="filter-chip ${state.normalTab===t.id?'active':''}" data-action="setNormalTab" data-tab="${t.id}">${esc(t.label)}</button>`).join('')}
+    </div>
+
+    <table class="datatable">
+      <thead><tr>
+        <th style="width:36px"></th>
+        <th>วันที่</th><th>ชื่อ-สกุล</th><th>HN</th><th>แพทย์/หัตถการ</th><th>ระบบแนะนำ</th><th>ยืนยัน</th>
+      </tr></thead>
+      <tbody>
+        ${rows.length===0 ? `<tr><td colspan="7" style="padding:32px;text-align:center;color:var(--text-faint)">ไม่พบข้อมูลที่ตรงกับคำค้นหา</td></tr>` : rows.map(c=>{
+          const suggestion = c.status==='unclassified' ? suggestStatus(c) : c.status;
+          const meta = STATUS_META[suggestion];
+          const confirmedMeta = STATUS_META[c.status];
+          return `
+          <tr>
+            <td><input type="checkbox" ${state.normalSelected[c.id]?'checked':''} data-action="toggleNormalSelect" data-id="${c.id}"></td>
+            <td>${esc(c.date)}</td>
+            <td style="color:var(--text);font-weight:500">${esc(c.name)}</td>
+            <td>${esc(c.hn)}</td>
+            <td>${esc(c.doctor)} · ${esc(c.procedure)}</td>
+            <td><span class="pill" style="background:${meta.bg};color:${meta.text}">${meta.label}</span></td>
+            <td>
+              ${c.status==='unclassified'
+                ? `<button class="btn-outline" style="padding:6px 12px;font-size:12px" data-action="confirmNormal" data-id="${c.id}" data-status="${suggestion}">เลือก</button>`
+                : `<span style="display:flex;align-items:center;gap:6px">
+                     <span style="color:var(--primary-deep);font-size:13px">✓</span>
+                     <button style="background:none;border:none;color:var(--text-sub);font-size:12px;cursor:pointer;text-decoration:underline" data-action="editNormal" data-id="${c.id}">แก้</button>
+                   </span>`}
+            </td>
+          </tr>`;
+        }).join('')}
+      </tbody>
+    </table>
+
+    <div style="display:flex;align-items:center;gap:12px;padding:14px 18px;border-top:1px solid var(--border)">
+      <span style="font-size:12px;color:var(--text-sub)">ยืนยันแล้ว ${confirmedCount}/${totalAll} แถว</span>
+      <button class="btn-primary" style="margin-left:auto;padding:9px 16px" data-action="confirmAllNormal">✓ ยืนยันทั้งหมด</button>
+    </div>
+  </section>`;
+}
+
+function suggestStatus(c){
+  // simple deterministic mock suggestion based on id parity, just for demo purposes
+  const options = ['happy','complant','review'];
+  return options[c.id % 3];
+}
+
+function getCustomerHistory(c){
+  // Mock visit history — deterministic per customer so it stays consistent across renders
+  const base = [
+    { date: c.date, procedure: c.procedure, doctor: c.doctor, status: c.status, price: '฿ ' + (8000 + (c.id*137)%9000).toLocaleString() },
+  ];
+  const extra = [
+    { date:'12 ก.ค. 2569', procedure:'ปรึกษาเบื้องต้น + วิเคราะห์ผิว', doctor:c.doctor, status:'happy', price:'฿ 0 (ไม่มีค่าใช้จ่าย)' },
+    { date:'02 ส.ค. 2569', procedure:'Botox หน้าผาก 20 u', doctor:c.doctor, status:'happy', price:'฿ 6,500' },
+  ];
+  if(c.id % 3 === 0){
+    extra.push({ date:'20 ส.ค. 2569', procedure:'Filler ใต้ตา 1 cc', doctor:c.doctor, status:'review', price:'฿ 9,900' });
+  }
+  return [...base, ...extra].sort((a,b)=> a.date < b.date ? 1 : -1);
+}
+
+/* ======================= CUSTOMERS (master directory) ======================= */
+function renderCustomers(){
+  let rows = customers.slice();
+  const q = state.custSearch.trim().toLowerCase();
+  if(q){
+    rows = rows.filter(c =>
+      c.name.toLowerCase().includes(q) ||
+      c.hn.toLowerCase().includes(q) ||
+      c.phone.toLowerCase().includes(q) ||
+      c.doctor.toLowerCase().includes(q)
+    );
+  }
+  const {field, dir} = state.custSort;
+  rows.sort((a,b)=>{
+    const av = String(a[field]||''), bv = String(b[field]||'');
+    const cmp = av.localeCompare(bv, 'th');
+    return dir==='asc' ? cmp : -cmp;
+  });
+
+  function sortArrow(f){
+    if(state.custSort.field!==f) return '';
+    return state.custSort.dir==='asc' ? ' ↑' : ' ↓';
+  }
+
+  return `
+  <section class="card" style="overflow:hidden">
+    <div style="display:flex;align-items:center;gap:14px;flex-wrap:wrap;padding:16px 18px;border-bottom:1px solid var(--border)">
+      <div class="search-input" style="width:260px">
+        <span class="search-icon">🔍</span>
+        <input id="custSearchInput" placeholder="ค้นหาชื่อ, HN, เบอร์โทร, หรือแพทย์..." value="${esc(state.custSearch)}">
+      </div>
+      <span style="font-size:12px;color:var(--text-sub)">ทั้งหมด ${rows.length} รายการ</span>
+      <button class="btn-primary" style="margin-left:auto;padding:9px 16px" data-action="addCustomer">+ เพิ่มลูกค้า</button>
+    </div>
+    <div style="overflow-x:auto">
+    <table class="datatable">
+      <thead><tr>
+        <th><span class="sortable" data-action="sortCustomers" data-field="date">วันที่${sortArrow('date')}</span></th>
+        <th><span class="sortable" data-action="sortCustomers" data-field="name">ชื่อ-สกุล${sortArrow('name')}</span></th>
+        <th><span class="sortable" data-action="sortCustomers" data-field="hn">HN${sortArrow('hn')}</span></th>
+        <th>เบอร์โทร</th>
+        <th><span class="sortable" data-action="sortCustomers" data-field="doctor">แพทย์${sortArrow('doctor')}</span></th>
+        <th>หัตถการล่าสุด</th>
+        <th>ประเภท</th>
+        <th>สถานะ</th>
+        <th style="width:110px">จัดการ</th>
+      </tr></thead>
+      <tbody>
+        ${rows.length===0 ? `<tr><td colspan="9" style="padding:32px;text-align:center;color:var(--text-faint)">ไม่พบข้อมูลที่ตรงกับคำค้นหา "${esc(state.custSearch)}"</td></tr>` : rows.map(c=>{
+          const meta = STATUS_META[c.status];
+          return `
+          <tr>
+            <td>${esc(c.date)}</td>
+            <td style="color:var(--primary-deep);font-weight:500;cursor:pointer;text-decoration:underline" data-action="openCustHistory" data-id="${c.id}">${esc(c.name)}</td>
+            <td>${esc(c.hn)}</td>
+            <td>${esc(c.phone)}</td>
+            <td>${esc(c.doctor)}</td>
+            <td>${esc(c.procedure)}</td>
+            <td>${esc(c.type)}</td>
+            <td><span class="pill" style="background:${meta.bg};color:${meta.text}">${meta.label}</span></td>
+            <td>
+              <div style="display:flex;gap:6px">
+                <button style="background:none;border:1px solid var(--border);border-radius:8px;padding:5px 9px;font-size:11.5px;cursor:pointer;color:var(--text-sub)" data-action="editCustomer" data-id="${c.id}">แก้ไข</button>
+                <button style="background:none;border:1px solid var(--complant-border);border-radius:8px;padding:5px 9px;font-size:11.5px;cursor:pointer;color:var(--complant-text)" data-action="askDeleteCustomer" data-id="${c.id}">ลบ</button>
+              </div>
+            </td>
+          </tr>`;
+        }).join('')}
+      </tbody>
+    </table>
+    </div>
+  </section>
+  ${state.custEditing !== null ? renderCustomerModal() : ''}
+  ${state.custDeleting !== null ? renderDeleteConfirmModal() : ''}
+  ${state.custHistoryFor !== null ? renderCustHistoryModal() : ''}
+  `;
+}
+
+function renderCustomerModal(){
+  const isNew = state.custEditing === 'new';
+  const c = isNew ? {name:'',hn:'',phone:'',type:'ลูกค้าใหม่',doctor:DOCTORS[0],sale:SALES[0],date:'08 ก.ย. 2569',procedure:'',status:'unclassified'} : customers.find(x=>x.id===state.custEditing);
+  if(!c) return '';
+  return `
+  <div class="modal-overlay" data-action="closeModalOverlay">
+    <div class="modal-box" data-stop="1">
+      <div style="display:flex;align-items:flex-start;gap:12px">
+        <h2 style="margin:0;font-family:Prompt,sans-serif;font-weight:600;font-size:18px">${isNew ? 'เพิ่มลูกค้าใหม่' : 'แก้ไขข้อมูลลูกค้า'}</h2>
+        <button style="margin-left:auto;font-size:18px;color:var(--text-sub);cursor:pointer;line-height:1;padding:2px 6px;background:none;border:none" data-action="closeModal">×</button>
+      </div>
+      <div style="display:flex;flex-direction:column;gap:13px;margin-top:16px">
+        <label style="display:flex;flex-direction:column;gap:6px"><span style="font-size:11.5px;color:var(--text-sub)">ชื่อ-นามสกุล</span><input id="edit_name" value="${esc(c.name)}"></label>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px">
+          <label style="display:flex;flex-direction:column;gap:6px"><span style="font-size:11.5px;color:var(--text-sub)">HN</span><input id="edit_hn" value="${esc(c.hn)}"></label>
+          <label style="display:flex;flex-direction:column;gap:6px"><span style="font-size:11.5px;color:var(--text-sub)">เบอร์โทร</span><input id="edit_phone" value="${esc(c.phone)}"></label>
+        </div>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px">
+          <label style="display:flex;flex-direction:column;gap:6px"><span style="font-size:11.5px;color:var(--text-sub)">แพทย์ผู้ดูแล</span>
+            <select id="edit_doctor">${DOCTORS.map(d=>`<option ${d===c.doctor?'selected':''}>${esc(d)}</option>`).join('')}</select>
+          </label>
+          <label style="display:flex;flex-direction:column;gap:6px"><span style="font-size:11.5px;color:var(--text-sub)">ประเภทลูกค้า</span>
+            <select id="edit_type">
+              <option ${c.type==='ลูกค้าใหม่'?'selected':''}>ลูกค้าใหม่</option>
+              <option ${c.type==='ลูกค้าเก่า'?'selected':''}>ลูกค้าเก่า</option>
+            </select>
+          </label>
+        </div>
+        <label style="display:flex;flex-direction:column;gap:6px"><span style="font-size:11.5px;color:var(--text-sub)">หัตถการล่าสุด</span><input id="edit_procedure" value="${esc(c.procedure)}"></label>
+        <label style="display:flex;flex-direction:column;gap:6px"><span style="font-size:11.5px;color:var(--text-sub)">สถานะ</span>
+          <select id="edit_status">
+            <option value="unclassified" ${c.status==='unclassified'?'selected':''}>ยังไม่กรอง</option>
+            <option value="happy" ${c.status==='happy'?'selected':''}>Happy</option>
+            <option value="complant" ${c.status==='complant'?'selected':''}>Complant</option>
+            <option value="review" ${c.status==='review'?'selected':''}>Review</option>
+          </select>
+        </label>
+        <div style="display:flex;gap:10px;margin-top:2px">
+          <button class="btn-primary" style="flex:1" data-action="saveCustomerModal" data-id="${isNew?'new':c.id}">${isNew ? 'เพิ่มลูกค้า' : 'บันทึกการแก้ไข'}</button>
+          <button class="btn-outline" data-action="closeModal">ยกเลิก</button>
+        </div>
+      </div>
+    </div>
+  </div>`;
+}
+
+function renderDeleteConfirmModal(){
+  const c = customers.find(x=>x.id===state.custDeleting);
+  if(!c) return '';
+  return `
+  <div class="modal-overlay" data-action="closeDeleteOverlay">
+    <div class="modal-box" style="width:min(420px,100%)" data-stop="1">
+      <h2 style="margin:0;font-family:Prompt,sans-serif;font-weight:600;font-size:17px">ลบข้อมูลลูกค้า?</h2>
+      <p style="font-size:13px;color:var(--text-sub);line-height:1.6;margin:12px 0 0">คุณกำลังจะลบข้อมูลของ <b style="color:var(--text)">${esc(c.name)}</b> (${esc(c.hn)}) การลบนี้ไม่สามารถย้อนกลับได้</p>
+      <div style="display:flex;gap:10px;margin-top:18px">
+        <button class="btn-outline" style="flex:1" data-action="closeDeleteModal">ยกเลิก</button>
+        <button style="flex:1;text-align:center;background:var(--complant);color:#fff;font-family:Prompt,sans-serif;font-weight:500;font-size:13px;padding:11px;border-radius:10px;border:none;cursor:pointer" data-action="confirmDeleteCustomer" data-id="${c.id}">ลบข้อมูล</button>
+      </div>
+    </div>
+  </div>`;
+}
+
+function renderCustHistoryModal(){
+  const c = customers.find(x=>x.id===state.custHistoryFor);
+  if(!c) return '';
+  const history = getCustomerHistory(c);
+  return `
+  <div class="modal-overlay" data-action="closeHistoryOverlay">
+    <div class="modal-box" style="width:min(640px,100%)" data-stop="1">
+      <div style="display:flex;align-items:flex-start;gap:12px">
+        <div>
+          <h2 style="margin:0;font-family:Prompt,sans-serif;font-weight:600;font-size:18px">${esc(c.name)}</h2>
+          <div style="font-size:12.5px;color:var(--text-sub);margin-top:5px">${esc(c.hn)} · ${esc(c.phone)} · ${esc(c.type)}</div>
+        </div>
+        <button style="margin-left:auto;font-size:18px;color:var(--text-sub);cursor:pointer;line-height:1;padding:2px 6px;background:none;border:none" data-action="closeHistoryModal">×</button>
+      </div>
+
+      <div style="display:flex;gap:9px;margin-top:14px;flex-wrap:wrap">
+        <span class="pill" style="background:var(--card);color:var(--text-sub)">แพทย์ประจำ · ${esc(c.doctor)}</span>
+        <span class="pill" style="background:var(--card);color:var(--text-sub)">Sale · ${esc(c.sale)}</span>
+        <span class="pill" style="background:${STATUS_META[c.status].bg};color:${STATUS_META[c.status].text}">สถานะล่าสุด · ${STATUS_META[c.status].label}</span>
+      </div>
+
+      <div style="margin-top:18px;padding-top:16px;border-top:1px solid var(--border)">
+        <div style="font-size:11.5px;color:var(--text-sub);margin-bottom:11px;font-family:Prompt,sans-serif">ประวัติการรักษาทั้งหมด (${history.length} ครั้ง)</div>
+        <div style="display:flex;flex-direction:column;gap:10px">
+          ${history.map(h=>{
+            const meta = STATUS_META[h.status];
+            return `
+            <div style="display:grid;grid-template-columns:96px minmax(0,1fr) auto;gap:12px;align-items:center;border:1px solid var(--border);border-radius:10px;padding:11px 13px">
+              <div style="font-size:12px;color:var(--text-sub)">${esc(h.date)}</div>
+              <div style="min-width:0">
+                <div style="font-size:13px;font-weight:500">${esc(h.procedure)}</div>
+                <div style="font-size:11.5px;color:var(--text-sub);margin-top:2px">${esc(h.doctor)} · ${esc(h.price)}</div>
+              </div>
+              <span class="pill" style="background:${meta.bg};color:${meta.text};white-space:nowrap">${meta.label}</span>
+            </div>`;
+          }).join('')}
+        </div>
+      </div>
+
+      <div style="display:flex;gap:10px;margin-top:18px">
+        <button class="btn-outline" style="flex:1" data-action="closeHistoryModal">ปิด</button>
+        <button class="btn-primary" style="flex:1" data-action="gotoTrackingFromHistory">ดูไทม์ไลน์ละเอียด</button>
+      </div>
+    </div>
+  </div>`;
+}
+
+/* ======================= COMPLANT ======================= */
+function renderComplant(){
+  const canClose = state.role==='staff';
+  return `
+  <div class="grid-auto" style="grid-template-columns:repeat(auto-fit,minmax(360px,1fr));align-items:start">
+    <section class="card" style="overflow:hidden">
+      <div style="display:flex;align-items:center;gap:10px;padding:15px 18px;border-bottom:1px solid var(--border)">
+        <h2 style="margin:0;font-family:Prompt,sans-serif;font-weight:600;font-size:15px">เคสที่มีสถานะ Complant</h2>
+        <span class="pill" style="color:var(--complant-text);background:var(--complant-bg)">${complants.length} เคส</span>
+      </div>
+      <div style="display:flex;flex-direction:column">
+        ${complants.map((c,i)=>`
+          <div style="padding:16px 18px;border-bottom:1px solid var(--border);display:grid;grid-template-columns:74px minmax(0,1fr) auto;gap:14px;align-items:start">
+            <div class="thumb" style="background:repeating-linear-gradient(135deg,var(--complant-bg) 0 8px,#F5E1D2 8px 16px)"><span class="thumb-label" style="color:var(--complant-text)">LINE photo</span></div>
+            <div style="min-width:0">
+              <div style="display:flex;align-items:center;gap:9px;flex-wrap:wrap">
+                <span style="font-family:Prompt,sans-serif;font-weight:500;font-size:14px">${esc(c.patient)}</span>
+                <span class="pill" style="background:var(--complant-bg);color:var(--complant-text)">Complant · ${esc(c.age)}</span>
+                <span style="font-size:11.5px;color:var(--text-sub)">${esc(c.proc)} · ${esc(c.doctor)}</span>
+              </div>
+              <div style="margin-top:9px;background:var(--card);border:1px solid var(--border);border-radius:10px;padding:11px 13px">
+                <div style="font-size:10.5px;letter-spacing:.06em;text-transform:uppercase;color:var(--text-faint);font-family:Prompt,sans-serif;margin-bottom:5px">ข้อความจากลูกค้า · LINE OA</div>
+                <div style="font-size:12.5px;line-height:1.65">${esc(c.msg)}</div>
+              </div>
+              <div style="font-size:11.5px;color:var(--text-sub);margin-top:8px">บันทึกโดย ${esc(c.by)} · ${esc(c.date)}</div>
+            </div>
+            <div style="display:flex;flex-direction:column;gap:8px;align-items:stretch">
+              ${canClose
+                ? `<button class="btn-primary" style="padding:9px 14px;white-space:nowrap" data-action="openCloseCase" data-idx="${i}">ปิดเคส</button>`
+                : `<div style="text-align:center;border:1px solid var(--border);color:var(--text-faint);font-size:12.5px;padding:9px 14px;border-radius:10px;white-space:nowrap">ปิดเคสได้เฉพาะพนักงาน</div>`}
+              <button class="btn-outline" style="padding:9px 14px;white-space:nowrap" data-nav="tracking">ดูไทม์ไลน์</button>
+            </div>
+          </div>`).join('')}
+      </div>
+    </section>
+
+    <aside class="card" style="padding:20px">
+      <h2 style="margin:0 0 4px;font-family:Prompt,sans-serif;font-weight:600;font-size:15px">เปิดเคส Complant ใหม่</h2>
+      <p style="margin:0 0 16px;font-size:11.5px;color:var(--text-sub);line-height:1.6">พนักงานเปิด LINE OA คู่กับระบบ แล้วคัดลอกข้อความ/รูปที่ลูกค้าส่งมาเข้าที่นี่</p>
+      <div style="display:flex;flex-direction:column;gap:13px">
+        <label style="display:flex;flex-direction:column;gap:6px"><span style="font-size:11.5px;color:var(--text-sub)">ลูกค้า</span>
+          <select><option>คุณ ณัฐริกา สุวรรณโชติ</option><option>คุณ พิมพ์ชนก อารีรักษ์</option></select>
+        </label>
+        <label style="display:flex;flex-direction:column;gap:6px"><span style="font-size:11.5px;color:var(--text-sub)">หัตถการที่เกี่ยวข้อง (procedure item)</span>
+          <select><option>Filler ร่องแก้ม 2 cc — 02 ก.ย. 2569</option><option>Botox กราม 50 u — 02 ก.ย. 2569</option></select>
+        </label>
+        <div style="background:var(--mint);border-radius:10px;padding:10px 12px;font-size:11.5px;color:var(--primary-deep);line-height:1.6">สถานะจะเปลี่ยนเฉพาะหัตถการรายการนี้ รายการอื่นใน visit เดียวกันยังเป็น Happy</div>
+        <label style="display:flex;flex-direction:column;gap:6px"><span style="font-size:11.5px;color:var(--text-sub)">ข้อความที่ลูกค้าแจ้งมา</span>
+          <textarea rows="4" placeholder="วางข้อความจาก LINE…" style="resize:vertical"></textarea>
+        </label>
+        <div>
+          <div style="font-size:11.5px;color:var(--text-sub);margin-bottom:7px">รูปอาการ · แหล่งที่มา LINE</div>
+          <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:9px">
+            <div class="thumb" style="background:repeating-linear-gradient(135deg,var(--complant-bg) 0 8px,#F5E1D2 8px 16px)"></div>
+            <button class="thumb-add">+</button>
+            <div></div>
+          </div>
+        </div>
+        <button class="btn-primary" data-action="openComplantSuccess">เปิดเคส → เปลี่ยนเป็น Complant</button>
+      </div>
+    </aside>
+  </div>`;
+}
+
+function renderCloseCaseModal(){
+  if(state.closingCase===null) return '';
+  const c = complants[state.closingCase];
+  return `
+  <div class="modal-overlay" data-action="cancelClose">
+    <div class="modal-box" data-stop="1">
+      <div style="display:flex;align-items:flex-start;gap:12px">
+        <div>
+          <h2 style="margin:0;font-family:Prompt,sans-serif;font-weight:600;font-size:18px">ปิดเคส Complant</h2>
+          <div style="font-size:12.5px;color:var(--text-sub);margin-top:5px">${esc(c.patient)} · ${esc(c.proc)}</div>
+        </div>
+        <button style="margin-left:auto;font-size:18px;color:var(--text-sub);cursor:pointer;line-height:1;padding:2px 6px;background:none;border:none" data-action="cancelClose">×</button>
+      </div>
+      <div style="background:var(--complant-bg);border:1px solid var(--complant-border);border-radius:10px;padding:12px 14px;margin-top:16px">
+        <div style="font-size:10.5px;letter-spacing:.06em;text-transform:uppercase;color:var(--complant-text);font-family:Prompt,sans-serif;margin-bottom:5px">ข้อความจากลูกค้า</div>
+        <div style="font-size:12.5px;color:var(--complant-text);line-height:1.65">${esc(c.msg)}</div>
+      </div>
+      <div style="display:flex;flex-direction:column;gap:13px;margin-top:16px">
+        <label style="display:flex;flex-direction:column;gap:6px"><span style="font-size:11.5px;color:var(--text-sub)">วิธีแก้ไข (resolution note) · จำเป็น</span>
+          <textarea rows="4" placeholder="เช่น นัดเข้ามาประเมิน ฉีดสลาย 1 ครั้ง อาการบวมลดลง ลูกค้ายืนยันพอใจ" style="resize:vertical"></textarea>
+        </label>
+        <div>
+          <div style="font-size:11.5px;color:var(--text-sub);margin-bottom:7px">รูปหลักฐานหลังแก้ไข (photo_type: resolved) · จำเป็น</div>
+          <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:9px">
+            <div class="thumb"><span class="thumb-label">resolved 01</span></div>
+            <button class="thumb-add">+</button>
+          </div>
+        </div>
+        <label style="display:flex;align-items:flex-start;gap:10px;background:var(--card);border:1px solid var(--border);border-radius:10px;padding:12px 13px;cursor:pointer">
+          <span class="checkbox-box checked" style="flex:none">✓</span>
+          <span style="font-size:12.5px;line-height:1.6">ยืนยันว่าลูกค้าได้รับการแก้ไขเรียบร้อย — สถานะหัตถการรายการนี้จะกลับเป็น <b style="color:var(--primary-deep)">Happy</b> และเปิดให้ส่งรีวิวได้</span>
+        </label>
+        <div style="display:flex;gap:10px;margin-top:2px">
+          <button class="btn-primary" style="flex:1" data-action="confirmCloseCase">ยืนยันปิดเคส</button>
+          <button class="btn-outline" data-action="cancelClose">ยกเลิก</button>
+        </div>
+        <div style="font-size:11px;color:var(--text-sub);text-align:center">การปิดเคสจะถูกบันทึกใน Complaint Logs (log_type: resolved) พร้อมชื่อผู้บันทึกและเวลา</div>
+      </div>
+    </div>
+  </div>`;
+}
+
+/* ======================= REVIEW ======================= */
+function renderReview(){
+  const eligible = customers.filter(c=>c.status==='review' || c.status==='happy').slice(0,4).map((c,i)=>({...c, initial:c.name.trim().charAt(2)||'ล'}));
+  const picked = eligible[state.reviewPicked] || eligible[0] || {name:'—', procedure:'—'};
+  return `
+  <div class="grid-auto" style="grid-template-columns:repeat(auto-fit,minmax(360px,1fr));align-items:start">
+    <div style="display:flex;flex-direction:column;gap:16px">
+      <section class="card" style="overflow:hidden">
+        <div style="display:flex;align-items:center;gap:10px;padding:15px 18px;border-bottom:1px solid var(--border)">
+          <h2 style="margin:0;font-family:Prompt,sans-serif;font-weight:600;font-size:15px">หัตถการที่รีวิวได้</h2>
+          <span class="pill" style="color:var(--primary-deep);background:var(--mint)">Happy · ไม่มี complant ค้าง</span>
+        </div>
+        <div style="display:flex;flex-direction:column">
+          ${eligible.map((e,i)=>`
+            <div style="padding:14px 18px;border-bottom:1px solid var(--border);display:flex;align-items:center;gap:14px">
+              <div style="width:34px;height:34px;border-radius:50%;background:var(--mint);display:flex;align-items:center;justify-content:center;font-size:12.5px;font-family:Prompt,sans-serif;color:var(--primary-deep)">${esc(e.initial)}</div>
+              <div style="min-width:0">
+                <div style="font-size:13px;font-weight:500">${esc(e.name)}</div>
+                <div style="font-size:11.5px;color:var(--text-sub)">${esc(e.procedure)} · ทำเมื่อ ${esc(e.date)}</div>
+              </div>
+              <div style="margin-left:auto;display:flex;align-items:center;gap:9px">
+                <span class="pill" style="background:var(--mint);color:var(--primary-deep)">Happy</span>
+                <button style="border:1px solid var(--primary);color:var(--primary-deep);font-size:12.5px;padding:8px 13px;border-radius:10px;cursor:pointer;white-space:nowrap;background:none" data-action="pickReview" data-idx="${i}">บันทึกรีวิว</button>
+              </div>
+            </div>`).join('')}
+        </div>
+      </section>
+
+      <section class="card" style="overflow:hidden">
+        <div style="padding:15px 18px;border-bottom:1px solid var(--border)"><h2 style="margin:0;font-family:Prompt,sans-serif;font-weight:600;font-size:15px">รีวิวที่บันทึกแล้ว</h2></div>
+        <div class="grid-auto" style="grid-template-columns:repeat(auto-fit,minmax(260px,1fr));padding:18px">
+          ${reviewsSaved.map(r=>`
+            <div style="background:var(--review-bg);border:1px solid var(--review-border);border-radius:12px;padding:15px">
+              <div style="display:flex;align-items:center;gap:9px">
+                <span class="pill" style="background:#fff;color:var(--review-text)">Review</span>
+                <span style="font-family:Prompt,sans-serif;font-size:12.5px;color:var(--review-text)">${r.stars}</span>
+                <span style="margin-left:auto;font-size:11px;color:var(--review-text)">${r.date}</span>
+              </div>
+              <div style="font-size:12.5px;line-height:1.7;margin-top:10px">"${esc(r.text)}"</div>
+              <div style="font-size:11.5px;color:var(--review-text);margin-top:11px">${esc(r.patient)} · ${esc(r.proc)}</div>
+              <div style="font-size:11px;color:#7A7DA8;margin-top:4px">บันทึกจาก LINE โดย ${esc(r.by)}</div>
+            </div>`).join('')}
+        </div>
+      </section>
+    </div>
+
+    <aside class="card" style="padding:20px">
+      <h2 style="margin:0 0 4px;font-family:Prompt,sans-serif;font-weight:600;font-size:15px">บันทึกรีวิวจาก LINE</h2>
+      <p style="margin:0 0 16px;font-size:11.5px;color:var(--text-sub);line-height:1.6">พนักงานพิมพ์ข้อความรีวิวที่ลูกค้าส่งเข้ามาใน LINE OA</p>
+      <div style="display:flex;flex-direction:column;gap:13px">
+        <div style="background:var(--card);border:1px solid var(--border);border-radius:10px;padding:11px 13px">
+          <div style="font-size:11px;color:var(--text-sub)">หัตถการที่เลือก</div>
+          <div style="font-size:13px;font-weight:500;margin-top:4px">${esc(picked.name)} · ${esc(picked.procedure)}</div>
+        </div>
+        <label style="display:flex;flex-direction:column;gap:6px"><span style="font-size:11.5px;color:var(--text-sub)">คะแนน</span>
+          <select><option>★★★★★ (5)</option><option>★★★★ (4)</option><option>★★★ (3)</option><option>★★ (2)</option><option>★ (1)</option></select>
+        </label>
+        <label style="display:flex;flex-direction:column;gap:6px"><span style="font-size:11.5px;color:var(--text-sub)">ข้อความรีวิว</span>
+          <textarea rows="5" placeholder="วางข้อความรีวิวจากลูกค้า…" style="resize:vertical"></textarea>
+        </label>
+        <div>
+          <div style="font-size:11.5px;color:var(--text-sub);margin-bottom:7px">รูปที่ลูกค้าส่งมา (ถ้ามี)</div>
+          <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:9px">
+            <div class="thumb" style="background:repeating-linear-gradient(135deg,var(--review-bg) 0 8px,#E1E1F2 8px 16px);border-color:var(--review-border)"></div>
+            <button class="thumb-add">+</button>
+            <div></div>
+          </div>
+        </div>
+        <button class="btn-primary" data-action="saveReview">บันทึกรีวิว</button>
+      </div>
+    </aside>
+  </div>`;
+}
+
+/* ======================= TRACKING ======================= */
+function renderTracking(){
+  const filters = ['ทั้งหมด','Happy','Complant','Review'];
+  const filterKeyMap = { 'ทั้งหมด':null, 'Happy':'happy', 'Complant':'complant', 'Review':'review' };
+  const activeKey = filterKeyMap[state.trackFilter];
+
+  const visibleItems = trackItems
+    .map((t, originalIndex) => ({ ...t, originalIndex }))
+    .filter(t => activeKey===null || t.status===activeKey);
+
+  const stillValid = visibleItems.some(t => t.originalIndex === state.trackIndex);
+  const selectedOriginalIndex = stillValid ? state.trackIndex : (visibleItems[0] ? visibleItems[0].originalIndex : null);
+  const item = selectedOriginalIndex !== null ? trackItems[selectedOriginalIndex] : null;
+  const itemTimeline = selectedOriginalIndex !== null ? (timelineByIndex[selectedOriginalIndex] || timeline) : [];
+  const currentStatusMeta = item ? STATUS_META[item.status] : null;
+
+  return `
+  <div class="grid-auto" style="grid-template-columns:repeat(auto-fit,minmax(320px,1fr));align-items:start">
+    <section class="card" style="overflow:hidden">
+      <div style="padding:14px 16px;border-bottom:1px solid var(--border)">
+        <input placeholder="ค้นหาลูกค้า" style="width:100%">
+        <div style="display:flex;gap:5px;margin-top:11px;flex-wrap:wrap">
+          ${filters.map(f=>`<button class="filter-chip ${state.trackFilter===f?'active':''}" data-action="setTrackFilter" data-filter="${f}">${f}</button>`).join('')}
+        </div>
+      </div>
+      <div style="display:flex;flex-direction:column">
+        ${visibleItems.length===0 ? `<div style="padding:26px 16px;text-align:center;color:var(--text-faint);font-size:12.5px">ไม่มีเคสในสถานะนี้</div>` : visibleItems.map(t=>{
+          const meta = STATUS_META[t.status];
+          const active = t.originalIndex === selectedOriginalIndex;
+          return `
+          <div style="padding:13px 16px;border-bottom:1px solid var(--border);cursor:pointer;border-left:3px solid ${active?'var(--primary)':'transparent'};background:${active?'var(--card)':'transparent'}" data-action="setTrackIndex" data-idx="${t.originalIndex}">
+            <div style="display:flex;align-items:center;gap:8px">
+              <span style="font-size:12.5px;font-weight:500">${esc(t.patient)}</span>
+              <span class="pill" style="background:${meta.bg};color:${meta.text};margin-left:auto;font-size:10.5px;padding:2px 7px">${meta.label}</span>
+            </div>
+            <div style="font-size:11.5px;color:var(--text-sub);margin-top:3px">${esc(t.proc)}</div>
+          </div>`;
+        }).join('')}
+      </div>
+    </section>
+
+    <section class="card" style="padding:22px">
+      ${!item ? `<div style="padding:40px;text-align:center;color:var(--text-faint);font-size:13px">เลือกเคสด้านซ้ายเพื่อดูไทม์ไลน์</div>` : `
+      <div style="display:flex;align-items:flex-start;gap:14px;flex-wrap:wrap;padding-bottom:18px;border-bottom:1px solid var(--border)">
+        <div>
+          <div style="font-family:Prompt,sans-serif;font-weight:600;font-size:17px">${esc(item.proc.split(' · ')[0])}</div>
+          <div style="font-size:12.5px;color:var(--text-sub);margin-top:5px">${esc(item.patient)} · ${esc(item.proc.split(' · ')[1]||'')}</div>
+        </div>
+        <div style="margin-left:auto;display:flex;align-items:center;gap:9px">
+          <span class="pill" style="background:${currentStatusMeta.bg};color:${currentStatusMeta.text}">สถานะปัจจุบัน · ${currentStatusMeta.label}</span>
+          <button class="btn-outline" style="padding:8px 13px" data-nav="export">Export ประวัติเคสนี้</button>
+        </div>
+      </div>
+      <div style="display:flex;flex-direction:column;margin-top:20px">
+        ${itemTimeline.map((e,ei)=>{
+          const dotColor = e.kind==='happy' ? 'var(--happy)' : e.kind==='complant' ? 'var(--complant)' : 'var(--review)';
+          const isLast = ei === itemTimeline.length - 1;
+          return `
+          <div style="display:grid;grid-template-columns:104px 24px minmax(0,1fr);gap:12px">
+            <div style="text-align:right;padding-top:2px">
+              <div style="font-family:Prompt,sans-serif;font-size:12.5px;font-weight:500">${e.date}</div>
+              <div style="font-size:11px;color:var(--text-sub)">${e.time}</div>
+            </div>
+            <div style="display:flex;flex-direction:column;align-items:center">
+              <span style="width:11px;height:11px;border-radius:50%;background:${dotColor};margin-top:4px"></span>
+              ${!isLast ? `<span style="flex:1;width:1px;background:var(--border);margin:5px 0"></span>` : ''}
+            </div>
+            <div style="padding-bottom:22px;min-width:0">
+              <div style="display:flex;align-items:center;gap:9px;flex-wrap:wrap">
+                <span style="font-family:Prompt,sans-serif;font-weight:500;font-size:14px">${esc(e.title)}</span>
+                <span style="font-size:11.5px;color:var(--text-sub)">โดย ${esc(e.by)}</span>
+              </div>
+              <div style="font-size:12.5px;color:var(--text-sub);line-height:1.7;margin-top:6px">${esc(e.detail)}</div>
+              ${e.hasMedia ? `
+                <div style="display:flex;gap:9px;margin-top:11px">
+                  <div class="thumb" style="width:78px"><span class="thumb-label">${esc(e.mediaLabel)}</span></div>
+                  <div class="thumb" style="width:78px"></div>
+                </div>` : ''}
+            </div>
+          </div>`;
+        }).join('')}
+      </div>
+      `}
+    </section>
+  </div>`;
+}
+
+/* ======================= EXPORT ======================= */
+function renderExport(){
+  const fieldGroups = [
+    { name:'ข้อมูลลูกค้า', fields:['ชื่อ-นามสกุล','เบอร์โทร','ที่อยู่','วันเดือนปีเกิด / อายุ','อาชีพ','เชื้อชาติ / สัญชาติ','ประเภทลูกค้า','สิทธิประกันสังคม'] },
+    { name:'หัตถการและสถานะ', fields:['วันที่ทำหัตถการ','รายการหัตถการ','บริเวณ / ปริมาณ','ราคา','สถานะเคส','แพทย์ผู้ดูแล','พนักงานขาย (Sale)'] },
+    { name:'Complant / Review', fields:['ข้อความจากลูกค้า','วิธีแก้ไข','จำนวนวันที่ใช้ปิดเคส','ข้อความรีวิว','ลิงก์รูปภาพ'] }
+  ];
+  const allFields = fieldGroups.flatMap(g=>g.fields);
+  const role = state.role;
+  function isLocked(label){ return role==='doctor' && ['ที่อยู่','ราคา','สิทธิประกันสังคม'].includes(label); }
+  const selected = allFields.filter(f => !isLocked(f) && !state.fieldsOff[f]);
+  const formats = [
+    {id:'PDF', note:'สำหรับพิมพ์ / ส่งลูกค้า'},
+    {id:'Excel', label:'Excel (.xlsx)', note:'ทำงานกับตัวเลขต่อ'},
+    {id:'Word', label:'Word (.docx)', note:'แก้ข้อความเพิ่มเติม'}
+  ];
+  const scopeLabel = state.scope==='patient' ? 'ลูกค้า' : 'จัดกลุ่มตาม';
+  const scopeValue = state.scope==='patient' ? 'คุณ ณัฐริกา สุวรรณโชติ' : 'รายเดือน';
+  const exportSummary = (state.scope==='patient' ? 'ประวัติรายคน · 1 ลูกค้า · 12 หัตถการ' : 'รายงานสรุป · 01 ส.ค. – 08 ก.ย. 2569 · ' + customers.length + ' หัตถการ') + ' · ' + selected.length + ' คอลัมน์';
+  const permissionNote = role==='doctor' ? 'บทบาทแพทย์: export ได้เฉพาะเคสของตนเอง' : role==='admin' ? 'บทบาทผู้ดูแลระบบ: เข้าถึงได้ทุกเคส' : 'บทบาทพนักงาน: export ตามสิทธิ์การเข้าถึงข้อมูล';
+
+  return `
+  <div class="grid-auto" style="grid-template-columns:repeat(auto-fit,minmax(340px,1fr));align-items:start">
+    <div style="display:flex;flex-direction:column;gap:16px">
+      <section class="card" style="padding:20px">
+        <h2 style="margin:0 0 14px;font-family:Prompt,sans-serif;font-weight:600;font-size:15px">1 · ขอบเขตข้อมูล</h2>
+        <div class="grid-auto" style="grid-template-columns:repeat(auto-fit,minmax(240px,1fr))">
+          <div class="checkbox-row ${state.scope==='patient'?'checked':''}" data-action="setScope" data-scope="patient">
+            <div><div style="font-family:Prompt,sans-serif;font-weight:500;font-size:13.5px">ประวัติคนไข้รายคน</div><div style="font-size:11.5px;color:var(--text-sub);margin-top:5px;line-height:1.6">ทุก visit / หัตถการ / สถานะ ของลูกค้า 1 ราย</div></div>
+          </div>
+          <div class="checkbox-row ${state.scope==='summary'?'checked':''}" data-action="setScope" data-scope="summary">
+            <div><div style="font-family:Prompt,sans-serif;font-weight:500;font-size:13.5px">รายงานสรุปรวม</div><div style="font-size:11.5px;color:var(--text-sub);margin-top:5px;line-height:1.6">สรุปตามช่วงเวลา · จำนวนหัตถการ / สถานะ / แพทย์</div></div>
+          </div>
+        </div>
+        <div class="grid-auto" style="grid-template-columns:repeat(auto-fit,minmax(180px,1fr));margin-top:15px">
+          <label style="display:flex;flex-direction:column;gap:6px"><span style="font-size:11.5px;color:var(--text-sub)">${scopeLabel}</span><input value="${esc(scopeValue)}"></label>
+          <label style="display:flex;flex-direction:column;gap:6px"><span style="font-size:11.5px;color:var(--text-sub)">ช่วงเวลา</span><input value="01 ส.ค. – 08 ก.ย. 2569"></label>
+          <label style="display:flex;flex-direction:column;gap:6px"><span style="font-size:11.5px;color:var(--text-sub)">กรองสถานะ</span><select><option>ทั้งหมด</option><option>Happy</option><option>Complant</option><option>Review</option></select></label>
+        </div>
+      </section>
+
+      <section class="card" style="padding:20px">
+        <div style="display:flex;align-items:center;gap:11px;margin-bottom:6px">
+          <h2 style="margin:0;font-family:Prompt,sans-serif;font-weight:600;font-size:15px">2 · เลือกคอลัมน์ที่ต้องการ</h2>
+          <span class="pill" style="color:var(--primary-deep);background:var(--mint)">เลือกแล้ว ${selected.length} คอลัมน์</span>
+          <button style="margin-left:auto;font-size:12px;color:var(--primary-deep);cursor:pointer;background:none;border:none" data-action="selectAllFields">เลือกทั้งหมด</button>
+          <button style="font-size:12px;color:var(--text-sub);cursor:pointer;background:none;border:none" data-action="clearAllFields">ล้าง</button>
+        </div>
+        <p style="margin:0 0 16px;font-size:11.5px;color:var(--text-sub)">คอลัมน์ที่ไม่อยู่ในสิทธิ์ของบทบาทปัจจุบันจะถูกล็อกไว้</p>
+        <div style="display:flex;flex-direction:column;gap:18px">
+          ${fieldGroups.map(g=>`
+            <div>
+              <div style="font-size:10.5px;letter-spacing:.08em;text-transform:uppercase;color:var(--text-faint);font-family:Prompt,sans-serif;margin-bottom:9px">${esc(g.name)}</div>
+              <div class="grid-auto" style="grid-template-columns:repeat(auto-fit,minmax(190px,1fr));gap:8px">
+                ${g.fields.map(f=>{
+                  const locked = isLocked(f);
+                  const on = !locked && !state.fieldsOff[f];
+                  if(locked) return `
+                    <div style="display:flex;align-items:center;gap:10px;border:1px solid var(--border);border-radius:10px;padding:10px 12px;background:#FAFCFB">
+                      <span class="checkbox-box" style="background:#F0F5F3"></span>
+                      <span style="font-size:12.5px;color:var(--text-faint)">${esc(f)}</span>
+                      <span style="margin-left:auto;font-size:10.5px;color:var(--text-faint)">ล็อก</span>
+                    </div>`;
+                  return `
+                    <div class="checkbox-row ${on?'checked':''}" data-action="toggleField" data-field="${esc(f)}">
+                      <span class="checkbox-box ${on?'checked':''}">${on?'✓':''}</span>
+                      <span style="font-size:12.5px;${on?'font-weight:500':'color:var(--text-sub)'}">${esc(f)}</span>
+                    </div>`;
+                }).join('')}
+              </div>
+            </div>`).join('')}
+        </div>
+      </section>
+    </div>
+
+    <aside style="display:flex;flex-direction:column;gap:16px">
+      <section class="card" style="padding:18px">
+        <h2 style="margin:0 0 13px;font-family:Prompt,sans-serif;font-weight:600;font-size:14px">3 · รูปแบบไฟล์</h2>
+        <div style="display:flex;flex-direction:column;gap:8px">
+          ${formats.map(f=>`
+            <div class="checkbox-row ${state.format===f.id?'checked':''}" data-action="setFormat" data-format="${f.id}" style="border-radius:10px">
+              <span style="width:15px;height:15px;border-radius:50%;border:${state.format===f.id?'4px solid var(--primary)':'1px solid var(--border)'};background:#fff"></span>
+              <span style="font-family:Prompt,sans-serif;font-weight:${state.format===f.id?'500':'400'};font-size:13px;color:${state.format===f.id?'var(--text)':'var(--text-sub)'}">${esc(f.label||f.id)}</span>
+              <span style="margin-left:auto;font-size:11px;color:var(--text-faint)">${esc(f.note)}</span>
+            </div>`).join('')}
+        </div>
+      </section>
+      <section class="card" style="background:var(--card);padding:18px">
+        <h2 style="margin:0 0 12px;font-family:Prompt,sans-serif;font-weight:600;font-size:14px">ตัวอย่างผลลัพธ์</h2>
+        <div style="border:1px solid var(--border);border-radius:10px;background:#fff;overflow:hidden">
+          <div style="display:flex;gap:1px;background:var(--border)">
+            ${selected.slice(0,4).map(c=>`<div style="flex:1;background:var(--card);padding:8px 9px;font-size:10.5px;font-family:Prompt,sans-serif;color:var(--text-sub);white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${esc(c)}</div>`).join('')}
+          </div>
+          <div style="padding:9px;display:flex;flex-direction:column;gap:7px">
+            <div style="height:7px;border-radius:4px;background:#EEF5F2"></div>
+            <div style="height:7px;border-radius:4px;background:#EEF5F2;width:86%"></div>
+            <div style="height:7px;border-radius:4px;background:#EEF5F2;width:72%"></div>
+          </div>
+        </div>
+        <div style="font-size:11.5px;color:var(--text-sub);margin-top:12px;line-height:1.6">${esc(exportSummary)}</div>
+        <button class="btn-primary" style="width:100%;margin-top:14px" data-action="doExport">Export ${state.format}</button>
+        <div style="font-size:11px;color:var(--text-sub);text-align:center;margin-top:9px">${esc(permissionNote)}</div>
+      </section>
+    </aside>
+  </div>`;
+}
+
+/* ======================= RENDER + EVENTS ======================= */
+function renderBody(){
+  switch(state.screen){
+    case 'dashboard': return renderDashboard();
+    case 'input': return renderInput();
+    case 'normal': return renderNormal();
+    case 'customers': return renderCustomers();
+    case 'complant': return renderComplant() + renderCloseCaseModal();
+    case 'review': return renderReview();
+    case 'tracking': return renderTracking();
+    case 'export': return renderExport();
+    default: return '';
+  }
+}
+
+function render(){
+  if(state.screen==='login'){
+    document.getElementById('root').innerHTML = renderLogin();
+  } else {
+    document.getElementById('root').innerHTML = renderShell(renderBody());
+  }
+  bindEvents();
+}
+
+function bindEvents(){
+  const root = document.getElementById('root');
+
+  root.querySelectorAll('[data-nav]').forEach(el=>{
+    el.addEventListener('click', (e)=>{ go(el.getAttribute('data-nav')); });
+  });
+
+  const roleSelect = document.getElementById('roleSelect');
+  if(roleSelect) roleSelect.addEventListener('change', e=> setRole(e.target.value));
+
+  root.querySelectorAll('[data-action="logout"]').forEach(el=>el.addEventListener('click', ()=>{ go('login'); }));
+
+  // Login
+  root.querySelectorAll('[data-action="pickLoginRole"]').forEach(el=>{
+    el.addEventListener('click', ()=>{ state.loginRole = el.getAttribute('data-role'); render(); });
+  });
+  const doLoginBtn = root.querySelector('[data-action="doLogin"]');
+  if(doLoginBtn) doLoginBtn.addEventListener('click', ()=>{
+    state.role = state.loginRole;
+    go('dashboard');
+  });
+
+  // Input
+  root.querySelectorAll('[data-action="setInputMode"]').forEach(el=>{
+    el.addEventListener('click', ()=>{ state.inputMode = el.getAttribute('data-mode'); render(); });
+  });
+  const saveInputBtn = root.querySelector('[data-action="saveInput"]');
+  if(saveInputBtn) saveInputBtn.addEventListener('click', ()=> showToast('บันทึกข้อมูลแล้ว (mockup) — สถานะเริ่มต้น Happy'));
+  const csvSim = root.querySelector('[data-action="simulateCsv"]');
+  if(csvSim) csvSim.addEventListener('click', ()=> showToast('เลือกไฟล์ patients_sep2026.csv แล้ว (mockup)'));
+  const doCsv = root.querySelector('[data-action="doCsvImport"]');
+  if(doCsv) doCsv.addEventListener('click', ()=>{
+    showToast('นำเข้า 32 รายการแล้ว — ไปที่ Normal เพื่อกรองข้อมูล');
+    go('normal');
+  });
+
+  // Normal
+  const normalSearchInput = document.getElementById('normalSearchInput');
+  if(normalSearchInput){
+    normalSearchInput.addEventListener('input', e=>{ state.normalSearch = e.target.value; render(); restoreFocus('normalSearchInput'); });
+  }
+  root.querySelectorAll('[data-action="setNormalTab"]').forEach(el=>{
+    el.addEventListener('click', ()=>{ state.normalTab = el.getAttribute('data-tab'); render(); });
+  });
+  root.querySelectorAll('[data-action="toggleNormalSelect"]').forEach(el=>{
+    el.addEventListener('change', ()=>{
+      const id = Number(el.getAttribute('data-id'));
+      state.normalSelected[id] = el.checked;
+    });
+  });
+  root.querySelectorAll('[data-action="confirmNormal"]').forEach(el=>{
+    el.addEventListener('click', ()=>{
+      const id = Number(el.getAttribute('data-id'));
+      const status = el.getAttribute('data-status');
+      const c = customers.find(x=>x.id===id);
+      if(c){ c.status = status; }
+      render();
+      showToast('ยืนยันประเภทเคสแล้ว: ' + STATUS_META[status].label);
+    });
+  });
+  root.querySelectorAll('[data-action="editNormal"]').forEach(el=>{
+    el.addEventListener('click', ()=>{
+      const id = Number(el.getAttribute('data-id'));
+      const c = customers.find(x=>x.id===id);
+      if(c){ c.status = 'unclassified'; }
+      render();
+    });
+  });
+  const confirmAllBtn = root.querySelector('[data-action="confirmAllNormal"]');
+  if(confirmAllBtn) confirmAllBtn.addEventListener('click', ()=>{
+    customers.filter(c=>c.status==='unclassified').forEach(c=>{ c.status = suggestStatus(c); });
+    render();
+    showToast('ยืนยันประเภทเคสทั้งหมดแล้ว');
+  });
+
+  // Customers
+  const custSearchInput = document.getElementById('custSearchInput');
+  if(custSearchInput){
+    custSearchInput.addEventListener('input', e=>{ state.custSearch = e.target.value; render(); restoreFocus('custSearchInput'); });
+  }
+  root.querySelectorAll('[data-action="sortCustomers"]').forEach(el=>{
+    el.addEventListener('click', ()=>{
+      const field = el.getAttribute('data-field');
+      if(state.custSort.field===field){ state.custSort.dir = state.custSort.dir==='asc' ? 'desc' : 'asc'; }
+      else { state.custSort = {field, dir:'asc'}; }
+      render();
+    });
+  });
+  const addCustBtn = root.querySelector('[data-action="addCustomer"]');
+  if(addCustBtn) addCustBtn.addEventListener('click', ()=>{ state.custEditing = 'new'; render(); });
+  root.querySelectorAll('[data-action="editCustomer"]').forEach(el=>{
+    el.addEventListener('click', ()=>{ state.custEditing = Number(el.getAttribute('data-id')); render(); });
+  });
+  root.querySelectorAll('[data-action="askDeleteCustomer"]').forEach(el=>{
+    el.addEventListener('click', ()=>{ state.custDeleting = Number(el.getAttribute('data-id')); render(); });
+  });
+  root.querySelectorAll('[data-action="openCustHistory"]').forEach(el=>{
+    el.addEventListener('click', ()=>{ state.custHistoryFor = Number(el.getAttribute('data-id')); render(); });
+  });
+  const closeHistoryBtns = root.querySelectorAll('[data-action="closeHistoryModal"], [data-action="closeHistoryOverlay"]');
+  closeHistoryBtns.forEach(el=>{
+    el.addEventListener('click', (e)=>{
+      if(el.getAttribute('data-action')==='closeHistoryOverlay' && e.target.closest('[data-stop]')) return;
+      state.custHistoryFor = null; render();
+    });
+  });
+  const gotoTrackBtn = root.querySelector('[data-action="gotoTrackingFromHistory"]');
+  if(gotoTrackBtn) gotoTrackBtn.addEventListener('click', ()=>{ state.custHistoryFor = null; go('tracking'); });
+  const closeModalBtns = root.querySelectorAll('[data-action="closeModal"], [data-action="closeModalOverlay"]');
+  closeModalBtns.forEach(el=>{
+    el.addEventListener('click', (e)=>{
+      if(el.getAttribute('data-action')==='closeModalOverlay' && e.target.closest('[data-stop]')) return;
+      state.custEditing = null; render();
+    });
+  });
+  const closeDeleteBtns = root.querySelectorAll('[data-action="closeDeleteModal"], [data-action="closeDeleteOverlay"]');
+  closeDeleteBtns.forEach(el=>{
+    el.addEventListener('click', (e)=>{
+      if(el.getAttribute('data-action')==='closeDeleteOverlay' && e.target.closest('[data-stop]')) return;
+      state.custDeleting = null; render();
+    });
+  });
+  const saveCustBtn = root.querySelector('[data-action="saveCustomerModal"]');
+  if(saveCustBtn) saveCustBtn.addEventListener('click', ()=>{
+    const idAttr = saveCustBtn.getAttribute('data-id');
+    const name = document.getElementById('edit_name').value.trim();
+    const hn = document.getElementById('edit_hn').value.trim();
+    const phone = document.getElementById('edit_phone').value.trim();
+    const doctor = document.getElementById('edit_doctor').value;
+    const type = document.getElementById('edit_type').value;
+    const procedure = document.getElementById('edit_procedure').value.trim();
+    const status = document.getElementById('edit_status').value;
+    if(idAttr==='new'){
+      const newId = Math.max(0,...customers.map(c=>c.id))+1;
+      customers.push({ id:newId, name, hn, phone, type, doctor, sale:SALES[0], date:'08 ก.ย. 2569', procedure, status });
+      showToast('เพิ่มลูกค้าใหม่แล้ว');
+    } else {
+      const id = Number(idAttr);
+      const c = customers.find(x=>x.id===id);
+      if(c){ Object.assign(c, {name,hn,phone,doctor,type,procedure,status}); }
+      showToast('บันทึกการแก้ไขแล้ว');
+    }
+    state.custEditing = null;
+    render();
+  });
+  const confirmDeleteBtn = root.querySelector('[data-action="confirmDeleteCustomer"]');
+  if(confirmDeleteBtn) confirmDeleteBtn.addEventListener('click', ()=>{
+    const id = Number(confirmDeleteBtn.getAttribute('data-id'));
+    customers = customers.filter(c=>c.id!==id);
+    state.custDeleting = null;
+    render();
+    showToast('ลบข้อมูลลูกค้าแล้ว');
+  });
+
+  // Complant
+  root.querySelectorAll('[data-action="openCloseCase"]').forEach(el=>{
+    el.addEventListener('click', ()=>{ state.closingCase = Number(el.getAttribute('data-idx')); render(); });
+  });
+  const cancelCloseBtns = root.querySelectorAll('[data-action="cancelClose"]');
+  cancelCloseBtns.forEach(el=>{
+    el.addEventListener('click', (e)=>{
+      if(el.classList.contains('modal-overlay') && e.target.closest('[data-stop]')) return;
+      state.closingCase = null; render();
+    });
+  });
+  const confirmCloseBtn = root.querySelector('[data-action="confirmCloseCase"]');
+  if(confirmCloseBtn) confirmCloseBtn.addEventListener('click', ()=>{
+    state.closingCase = null;
+    showToast('ปิดเคสแล้ว — สถานะกลับเป็น Happy');
+    go('tracking');
+  });
+  const openComplantSuccessBtn = root.querySelector('[data-action="openComplantSuccess"]');
+  if(openComplantSuccessBtn) openComplantSuccessBtn.addEventListener('click', ()=> showToast('เปิดเคส Complant แล้ว (mockup)'));
+
+  // stop propagation inside modal box
+  root.querySelectorAll('[data-stop]').forEach(el=>{
+    el.addEventListener('click', e=> e.stopPropagation());
+  });
+
+  // Review
+  root.querySelectorAll('[data-action="pickReview"]').forEach(el=>{
+    el.addEventListener('click', ()=>{ state.reviewPicked = Number(el.getAttribute('data-idx')); render(); });
+  });
+  const saveReviewBtn = root.querySelector('[data-action="saveReview"]');
+  if(saveReviewBtn) saveReviewBtn.addEventListener('click', ()=> showToast('บันทึกรีวิวแล้ว (mockup)'));
+
+  // Tracking
+  root.querySelectorAll('[data-action="setTrackFilter"]').forEach(el=>{
+    el.addEventListener('click', ()=>{ state.trackFilter = el.getAttribute('data-filter'); render(); });
+  });
+  root.querySelectorAll('[data-action="setTrackIndex"]').forEach(el=>{
+    el.addEventListener('click', ()=>{ state.trackIndex = Number(el.getAttribute('data-idx')); render(); });
+  });
+
+  // Export
+  root.querySelectorAll('[data-action="setScope"]').forEach(el=>{
+    el.addEventListener('click', ()=>{ state.scope = el.getAttribute('data-scope'); render(); });
+  });
+  root.querySelectorAll('[data-action="toggleField"]').forEach(el=>{
+    el.addEventListener('click', ()=>{
+      const f = el.getAttribute('data-field');
+      state.fieldsOff[f] = !state.fieldsOff[f];
+      render();
+    });
+  });
+  const selAllBtn = root.querySelector('[data-action="selectAllFields"]');
+  if(selAllBtn) selAllBtn.addEventListener('click', ()=>{ state.fieldsOff = {}; render(); });
+  const clearAllBtn = root.querySelector('[data-action="clearAllFields"]');
+  if(clearAllBtn) clearAllBtn.addEventListener('click', ()=>{
+    const fieldGroups = [
+      ['ชื่อ-นามสกุล','เบอร์โทร','ที่อยู่','วันเดือนปีเกิด / อายุ','อาชีพ','เชื้อชาติ / สัญชาติ','ประเภทลูกค้า','สิทธิประกันสังคม'],
+      ['วันที่ทำหัตถการ','รายการหัตถการ','บริเวณ / ปริมาณ','ราคา','สถานะเคส','แพทย์ผู้ดูแล','พนักงานขาย (Sale)'],
+      ['ข้อความจากลูกค้า','วิธีแก้ไข','จำนวนวันที่ใช้ปิดเคส','ข้อความรีวิว','ลิงก์รูปภาพ']
+    ].flat();
+    fieldGroups.forEach(f=> state.fieldsOff[f] = true);
+    render();
+  });
+  root.querySelectorAll('[data-action="setFormat"]').forEach(el=>{
+    el.addEventListener('click', ()=>{ state.format = el.getAttribute('data-format'); render(); });
+  });
+  const doExportBtn = root.querySelector('[data-action="doExport"]');
+  if(doExportBtn) doExportBtn.addEventListener('click', ()=> showToast('Export ' + state.format + ' สำเร็จ (mockup)'));
+}
+
+function restoreFocus(id){
+  const el = document.getElementById(id);
+  if(el){ el.focus(); const v = el.value; el.value=''; el.value=v; }
+}
+
+render();
+</script>
+</body>
+</html>
