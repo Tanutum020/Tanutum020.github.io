@@ -120,6 +120,15 @@ table.datatable tbody tr:hover{background:var(--card)}
 const DOCTORS = ['พ.ญ. ปวีณา ศรีวัฒน์', 'น.พ. ธนกฤต วงศ์ไพศาล'];
 const SALES = ['ปิยะ ชูเกียรติ', 'สมฤทัย พงษ์พานิช'];
 
+let systemUsers = [
+  { id:1, name:'สมฤทัย พงษ์พานิช', username:'somruthai', role:'staff', active:true, lastLogin:'08 ก.ย. 2569 · 08:40' },
+  { id:2, name:'ปิยะ ชูเกียรติ', username:'piya', role:'staff', active:true, lastLogin:'08 ก.ย. 2569 · 09:02' },
+  { id:3, name:'พ.ญ. ปวีณา ศรีวัฒน์', username:'dr.paweena', role:'doctor', active:true, lastLogin:'07 ก.ย. 2569 · 17:15' },
+  { id:4, name:'น.พ. ธนกฤต วงศ์ไพศาล', username:'dr.thanakrit', role:'doctor', active:true, lastLogin:'06 ก.ย. 2569 · 14:30' },
+  { id:5, name:'วีรภัทร ตั้งสกุล', username:'weerapat', role:'admin', active:true, lastLogin:'08 ก.ย. 2569 · 07:55' },
+  { id:6, name:'ชนากานต์ ใจซื่อ', username:'chanakan', role:'staff', active:false, lastLogin:'21 ส.ค. 2569 · 10:12' },
+];
+
 let customers = [
   { id:1, name:'คุณ ณัฐริกา สุวรรณโชติ', hn:'HN-00231', phone:'081-234-5678', type:'ลูกค้าเก่า', doctor:DOCTORS[0], sale:SALES[0], date:'02 ก.ย. 2569', procedure:'Filler ร่องแก้ม 2 cc', status:'happy' },
   { id:2, name:'คุณ พิมพ์ชนก อารีรักษ์', hn:'HN-00198', phone:'089-555-1122', type:'ลูกค้าเก่า', doctor:DOCTORS[1], sale:SALES[0], date:'02 ก.ย. 2569', procedure:'Botox กราม 50 u', status:'complant' },
@@ -146,10 +155,10 @@ const complants = [
 ];
 
 const reviewsSaved = [
-  { stars:'★★★★★', date:'06 ก.ย. 2569', text:'ตอนแรกกังวลมาก แต่ทางคลินิกดูแลดีและตามผลให้ตลอด ประทับใจค่ะ', patient:'คุณ ณัฐริกา ส.', proc:'Filler ร่องแก้ม 2 cc', by:'ปิยะ' },
-  { stars:'★★★★★', date:'02 ก.ย. 2569', text:'หน้าใสขึ้นจริง หมออธิบายละเอียด ไม่ขายของเกินจำเป็น', patient:'คุณ เมธาวี จ.', proc:'Laser Toning หน้า', by:'สมฤทัย' },
-  { stars:'★★★★', date:'30 ส.ค. 2569', text:'ผลลัพธ์ดีค่ะ แต่รอคิวนานหน่อยตอนวันเสาร์', patient:'คุณ ปวริศา ธ.', proc:'Botox หน้าผาก 30 u', by:'ปิยะ' },
-  { stars:'★★★★★', date:'28 ส.ค. 2569', text:'ใต้ตาดูสดใสขึ้นมาก พี่พนักงานติดตามอาการให้ทุกวัน', patient:'คุณ ชญาดา ก.', proc:'Filler ใต้ตา 1 cc', by:'สมฤทัย' }
+  { stars:'★★★★★', date:'06 ก.ย. 2569', text:'ตอนแรกกังวลมาก แต่ทางคลินิกดูแลดีและตามผลให้ตลอด ประทับใจค่ะ', patient:'คุณ ณัฐริกา ส.', proc:'Filler ร่องแก้ม 2 cc', by:'ปิยะ', doctor:DOCTORS[0] },
+  { stars:'★★★★★', date:'02 ก.ย. 2569', text:'หน้าใสขึ้นจริง หมออธิบายละเอียด ไม่ขายของเกินจำเป็น', patient:'คุณ เมธาวี จ.', proc:'Laser Toning หน้า', by:'สมฤทัย', doctor:DOCTORS[1] },
+  { stars:'★★★★', date:'30 ส.ค. 2569', text:'ผลลัพธ์ดีค่ะ แต่รอคิวนานหน่อยตอนวันเสาร์', patient:'คุณ ปวริศา ธ.', proc:'Botox หน้าผาก 30 u', by:'ปิยะ', doctor:DOCTORS[0] },
+  { stars:'★★★★★', date:'28 ส.ค. 2569', text:'ใต้ตาดูสดใสขึ้นมาก พี่พนักงานติดตามอาการให้ทุกวัน', patient:'คุณ ชญาดา ก.', proc:'Filler ใต้ตา 1 cc', by:'สมฤทัย', doctor:DOCTORS[1] }
 ];
 
 const timeline = [
@@ -161,14 +170,14 @@ const timeline = [
 ];
 
 const trackItems = [
-  { patient:'คุณ ณัฐริกา สุวรรณโชติ', proc:'Filler ร่องแก้ม 2 cc · 02 ก.ย.', status:'happy' },
-  { patient:'คุณ ณัฐริกา สุวรรณโชติ', proc:'Botox หน้าผาก 30 u · 02 ก.ย.', status:'happy' },
-  { patient:'คุณ พิมพ์ชนก อารีรักษ์', proc:'Botox กราม 50 u · 02 ก.ย.', status:'complant' },
-  { patient:'คุณ กัญญาวีร์ ทองแท้', proc:'Laser Pico หน้า · 01 ก.ย.', status:'complant' },
-  { patient:'คุณ ศิรประภา วงศ์ดี', proc:'Meso Fat คาง · 05 ก.ย.', status:'complant' },
-  { patient:'คุณ ธัญวลัย ศรีสมบัติ', proc:'IV Drip Glutathione · 06 ก.ย.', status:'complant' },
-  { patient:'คุณ อรณิชา พูนสิน', proc:'ร้อยไหม 20 เส้น · 28 ส.ค.', status:'happy' },
-  { patient:'คุณ เมธาวี จันทร์เพ็ง', proc:'Laser Toning หน้า · 31 ส.ค.', status:'review' }
+  { patient:'คุณ ณัฐริกา สุวรรณโชติ', proc:'Filler ร่องแก้ม 2 cc · 02 ก.ย.', status:'happy', doctor:DOCTORS[0] },
+  { patient:'คุณ ณัฐริกา สุวรรณโชติ', proc:'Botox หน้าผาก 30 u · 02 ก.ย.', status:'happy', doctor:DOCTORS[0] },
+  { patient:'คุณ พิมพ์ชนก อารีรักษ์', proc:'Botox กราม 50 u · 02 ก.ย.', status:'complant', doctor:DOCTORS[1] },
+  { patient:'คุณ กัญญาวีร์ ทองแท้', proc:'Laser Pico หน้า · 01 ก.ย.', status:'complant', doctor:DOCTORS[0] },
+  { patient:'คุณ ศิรประภา วงศ์ดี', proc:'Meso Fat คาง · 05 ก.ย.', status:'complant', doctor:DOCTORS[1] },
+  { patient:'คุณ ธัญวลัย ศรีสมบัติ', proc:'IV Drip Glutathione · 06 ก.ย.', status:'complant', doctor:DOCTORS[1] },
+  { patient:'คุณ อรณิชา พูนสิน', proc:'ร้อยไหม 20 เส้น · 28 ส.ค.', status:'happy', doctor:DOCTORS[0] },
+  { patient:'คุณ เมธาวี จันทร์เพ็ง', proc:'Laser Toning หน้า · 31 ส.ค.', status:'review', doctor:DOCTORS[1] }
 ];
 
 const timelineByIndex = {
@@ -221,6 +230,10 @@ const state = {
   format: 'PDF',
   fieldsOff: {},
   closingCase: null,
+  userEditing: null,
+  userDeactivating: null,
+  settingsTab: 'staff',
+  newStaffName: '',
 };
 
 const STATUS_META = {
@@ -231,8 +244,18 @@ const STATUS_META = {
 };
 
 function esc(s){ return String(s).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c])); }
-function go(screen){ state.screen = screen; render(); window.scrollTo(0,0); }
-function setRole(r){ state.role = r; render(); }
+function go(screen){
+  if(state.screen!=='login' && !canAccess(screen, state.role)){
+    showToast('บทบาทนี้ไม่มีสิทธิ์เข้าหน้านี้');
+    return;
+  }
+  state.screen = screen; render(); window.scrollTo(0,0);
+}
+function setRole(r){
+  state.role = r;
+  if(!canAccess(state.screen, r)){ state.screen = firstAllowedScreen(r); }
+  render();
+}
 function showToast(msg){
   let t = document.getElementById('toast');
   if(!t){ t = document.createElement('div'); t.id='toast'; t.className='toast'; document.body.appendChild(t); }
@@ -248,15 +271,25 @@ function userName(r){ return r==='doctor' ? 'พ.ญ. ปวีณา ศรี�
 function userInitial(r){ return r==='doctor' ? 'ป' : r==='admin' ? 'ว' : 'ส'; }
 
 const NAV = [
-  {id:'dashboard', label:'Dashboard'},
-  {id:'input', label:'Input'},
-  {id:'normal', label:'กรองข้อมูล', count:()=>customers.filter(c=>c.status==='unclassified').length},
-  {id:'customers', label:'ลูกค้าทั้งหมด'},
-  {id:'complant', label:'Complant', count:()=>complants.length},
-  {id:'review', label:'Review'},
-  {id:'tracking', label:'Tracking'},
-  {id:'export', label:'Export'},
+  {id:'dashboard', label:'Dashboard', roles:['staff','doctor','admin']},
+  {id:'input', label:'Input', roles:['staff','admin']},
+  {id:'normal', label:'กรองข้อมูล', roles:['staff','admin'], count:()=>customers.filter(c=>c.status==='unclassified').length},
+  {id:'customers', label:'ลูกค้าทั้งหมด', roles:['staff','doctor','admin']},
+  {id:'complant', label:'Complant', roles:['staff','doctor','admin'], count:()=>complants.length},
+  {id:'review', label:'Review', roles:['staff','doctor','admin']},
+  {id:'tracking', label:'Tracking', roles:['staff','doctor','admin']},
+  {id:'export', label:'Export', roles:['staff','admin']},
+  {id:'users', label:'จัดการผู้ใช้', roles:['admin']},
+  {id:'settings', label:'ตั้งค่าระบบ', roles:['admin']},
 ];
+function canAccess(screenId, role){
+  const item = NAV.find(n=>n.id===screenId);
+  return item ? item.roles.includes(role) : true;
+}
+function firstAllowedScreen(role){
+  const item = NAV.find(n=>n.roles.includes(role));
+  return item ? item.id : 'dashboard';
+}
 
 const PAGE_META = {
   dashboard: ['ภาพรวม', ()=> 'สวัสดี ' + (state.role==='doctor' ? 'คุณหมอ' : 'คุณสมฤทัย'), ()=> state.role==='doctor' ? 'แสดงเฉพาะเคสที่คุณเกี่ยวข้อง' : 'สรุปสถานะหัตถการทั้งคลินิก และเคสที่ต้องติดตามวันนี้'],
@@ -267,11 +300,13 @@ const PAGE_META = {
   review: ['ติดตามเคส', ()=>'Review', ()=>'บันทึกรีวิวที่ลูกค้าส่งมาทาง LINE สำหรับหัตถการที่ไม่มี complant ค้าง'],
   tracking: ['ติดตามเคส', ()=>'Tracking', ()=>'ไทม์ไลน์การเปลี่ยนสถานะของหัตถการแต่ละรายการ พร้อมผู้บันทึกและหลักฐาน'],
   export: ['รายงาน', ()=>'Export', ()=>'เลือกขอบเขต คอลัมน์ และรูปแบบไฟล์ก่อนดาวน์โหลด'],
+  users: ['ระบบ', ()=>'จัดการผู้ใช้', ()=>'ดูรายชื่อผู้ใช้ทั้งหมดในระบบ กำหนดบทบาท และเปิด-ปิดการใช้งานบัญชี'],
+  settings: ['ระบบ', ()=>'ตั้งค่าระบบ', ()=>'จัดการรายชื่อแพทย์ พนักงานขาย และค่าเริ่มต้นของคลินิก'],
 };
 
 function renderShell(bodyHtml){
   const meta = PAGE_META[state.screen];
-  const navHtml = NAV.map(item=>{
+  const navHtml = NAV.filter(item=>item.roles.includes(state.role)).map(item=>{
     const active = state.screen===item.id;
     const count = item.count ? item.count() : null;
     return `<button class="nav-item ${active?'active':''}" data-nav="${item.id}">
@@ -380,14 +415,19 @@ function renderLogin(){
 
 /* ======================= DASHBOARD (with charts) ======================= */
 function renderDashboard(){
-  const total = customers.length;
-  const happyCount = customers.filter(c=>c.status==='happy').length;
-  const complantCount = customers.filter(c=>c.status==='complant').length;
-  const reviewCount = customers.filter(c=>c.status==='review').length;
-  const unclassifiedCount = customers.filter(c=>c.status==='unclassified').length;
+  const isDoctor = state.role==='doctor';
+  const myDoctorName = DOCTORS[0];
+  const scopedCustomers = isDoctor ? customers.filter(c=>c.doctor===myDoctorName) : customers;
+  const scopedComplants = isDoctor ? complants.filter(c=>c.doctor===myDoctorName) : complants;
+
+  const total = scopedCustomers.length;
+  const happyCount = scopedCustomers.filter(c=>c.status==='happy').length;
+  const complantCount = scopedCustomers.filter(c=>c.status==='complant').length;
+  const reviewCount = scopedCustomers.filter(c=>c.status==='review').length;
+  const unclassifiedCount = scopedCustomers.filter(c=>c.status==='unclassified').length;
 
   const byDoctor = {};
-  customers.forEach(c=>{ byDoctor[c.doctor] = (byDoctor[c.doctor]||0)+1; });
+  scopedCustomers.forEach(c=>{ byDoctor[c.doctor] = (byDoctor[c.doctor]||0)+1; });
   const doctorEntries = Object.entries(byDoctor).sort((a,b)=>b[1]-a[1]);
   const maxDoctorCount = Math.max(...doctorEntries.map(e=>e[1]), 1);
 
@@ -421,7 +461,7 @@ function renderDashboard(){
     <div class="grid-auto" style="grid-template-columns:repeat(auto-fit,minmax(300px,1fr));align-items:start">
       <section class="card" style="padding:18px">
         <h2 style="margin:0 0 4px;font-family:Prompt,sans-serif;font-weight:600;font-size:15px">สัดส่วนสถานะหัตถการ</h2>
-        <p style="margin:0 0 16px;font-size:11.5px;color:var(--text-sub)">จากทั้งหมด ${total} เคสในระบบ</p>
+        <p style="margin:0 0 16px;font-size:11.5px;color:var(--text-sub)">จากทั้งหมด ${total} เคส${isDoctor ? 'ของคุณ' : 'ในระบบ'}</p>
         <div style="display:flex;height:14px;border-radius:8px;overflow:hidden;background:var(--card)">
           <div style="width:${happyCount/statusBarTotal*100}%;background:var(--happy)" title="Happy ${happyCount}"></div>
           <div style="width:${complantCount/statusBarTotal*100}%;background:var(--complant)" title="Complant ${complantCount}"></div>
@@ -436,6 +476,7 @@ function renderDashboard(){
         </div>
       </section>
 
+      ${isDoctor ? '' : `
       <section class="card" style="padding:18px">
         <h2 style="margin:0 0 4px;font-family:Prompt,sans-serif;font-weight:600;font-size:15px">จำนวนเคสต่อแพทย์</h2>
         <p style="margin:0 0 16px;font-size:11.5px;color:var(--text-sub)">นับจากหัตถการทั้งหมดในระบบ</p>
@@ -451,20 +492,20 @@ function renderDashboard(){
               </div>
             </div>`).join('')}
         </div>
-      </section>
+      </section>`}
     </div>
 
     <div class="grid-auto" style="grid-template-columns:repeat(auto-fit,minmax(340px,1fr));align-items:start">
       <section class="card" style="overflow:hidden">
         <div style="display:flex;align-items:center;gap:12px;padding:16px 18px;border-bottom:1px solid var(--border)">
           <h2 style="margin:0;font-family:Prompt,sans-serif;font-weight:600;font-size:15px">เคส Complant ที่ต้องติดตาม</h2>
-          <span class="pill" style="color:var(--complant-text);background:var(--complant-bg)">${complants.length} เคส</span>
+          <span class="pill" style="color:var(--complant-text);background:var(--complant-bg)">${scopedComplants.length} เคส</span>
           <div style="margin-left:auto;font-size:12.5px;color:var(--primary-deep);cursor:pointer" data-nav="complant">ดูทั้งหมด →</div>
         </div>
         <table class="datatable">
           <thead><tr><th>ลูกค้า</th><th>หัตถการ</th><th>แพทย์</th><th>แจ้งเมื่อ</th><th>สถานะ</th></tr></thead>
           <tbody>
-            ${complants.map(c=>`
+            ${scopedComplants.length===0 ? `<tr><td colspan="5" style="padding:24px;text-align:center;color:var(--text-faint)">ไม่มีเคส Complant ที่ต้องติดตาม</td></tr>` : scopedComplants.map(c=>`
               <tr style="cursor:pointer" data-nav="complant">
                 <td style="font-weight:500;color:var(--text)">${esc(c.patient)}</td>
                 <td>${esc(c.proc)}</td>
@@ -737,6 +778,7 @@ function getCustomerHistory(c){
 
 /* ======================= CUSTOMERS (master directory) ======================= */
 function renderCustomers(){
+  const isDoctor = state.role==='doctor';
   let rows = customers.slice();
   const q = state.custSearch.trim().toLowerCase();
   if(q){
@@ -767,7 +809,9 @@ function renderCustomers(){
         <input id="custSearchInput" placeholder="ค้นหาชื่อ, HN, เบอร์โทร, หรือแพทย์..." value="${esc(state.custSearch)}">
       </div>
       <span style="font-size:12px;color:var(--text-sub)">ทั้งหมด ${rows.length} รายการ</span>
-      <button class="btn-primary" style="margin-left:auto;padding:9px 16px" data-action="addCustomer">+ เพิ่มลูกค้า</button>
+      ${isDoctor
+        ? `<span style="margin-left:auto;font-size:11.5px;color:var(--text-faint)">โหมดดูอย่างเดียว</span>`
+        : `<button class="btn-primary" style="margin-left:auto;padding:9px 16px" data-action="addCustomer">+ เพิ่มลูกค้า</button>`}
     </div>
     <div style="overflow-x:auto">
     <table class="datatable">
@@ -780,7 +824,7 @@ function renderCustomers(){
         <th>หัตถการล่าสุด</th>
         <th>ประเภท</th>
         <th>สถานะ</th>
-        <th style="width:110px">จัดการ</th>
+        ${isDoctor ? '' : `<th style="width:110px">จัดการ</th>`}
       </tr></thead>
       <tbody>
         ${rows.length===0 ? `<tr><td colspan="9" style="padding:32px;text-align:center;color:var(--text-faint)">ไม่พบข้อมูลที่ตรงกับคำค้นหา "${esc(state.custSearch)}"</td></tr>` : rows.map(c=>{
@@ -795,12 +839,13 @@ function renderCustomers(){
             <td>${esc(c.procedure)}</td>
             <td>${esc(c.type)}</td>
             <td><span class="pill" style="background:${meta.bg};color:${meta.text}">${meta.label}</span></td>
+            ${isDoctor ? '' : `
             <td>
               <div style="display:flex;gap:6px">
                 <button style="background:none;border:1px solid var(--border);border-radius:8px;padding:5px 9px;font-size:11.5px;cursor:pointer;color:var(--text-sub)" data-action="editCustomer" data-id="${c.id}">แก้ไข</button>
                 <button style="background:none;border:1px solid var(--complant-border);border-radius:8px;padding:5px 9px;font-size:11.5px;cursor:pointer;color:var(--complant-text)" data-action="askDeleteCustomer" data-id="${c.id}">ลบ</button>
               </div>
-            </td>
+            </td>`}
           </tr>`;
         }).join('')}
       </tbody>
@@ -925,15 +970,22 @@ function renderCustHistoryModal(){
 /* ======================= COMPLANT ======================= */
 function renderComplant(){
   const canClose = state.role==='staff';
+  const isDoctor = state.role==='doctor';
+  const myDoctorName = DOCTORS[0];
+  const visibleComplants = complants
+    .map((c, originalIndex) => ({ ...c, originalIndex }))
+    .filter(c => !isDoctor || c.doctor === myDoctorName);
+
   return `
   <div class="grid-auto" style="grid-template-columns:repeat(auto-fit,minmax(360px,1fr));align-items:start">
     <section class="card" style="overflow:hidden">
       <div style="display:flex;align-items:center;gap:10px;padding:15px 18px;border-bottom:1px solid var(--border)">
         <h2 style="margin:0;font-family:Prompt,sans-serif;font-weight:600;font-size:15px">เคสที่มีสถานะ Complant</h2>
-        <span class="pill" style="color:var(--complant-text);background:var(--complant-bg)">${complants.length} เคส</span>
+        <span class="pill" style="color:var(--complant-text);background:var(--complant-bg)">${visibleComplants.length} เคส</span>
+        ${isDoctor ? `<span style="font-size:11.5px;color:var(--text-sub)">แสดงเฉพาะเคสของ ${esc(myDoctorName)}</span>` : ''}
       </div>
       <div style="display:flex;flex-direction:column">
-        ${complants.map((c,i)=>`
+        ${visibleComplants.length===0 ? `<div style="padding:28px;text-align:center;color:var(--text-faint);font-size:12.5px">ไม่มีเคส Complant ที่เกี่ยวข้องกับคุณ</div>` : visibleComplants.map((c)=>`
           <div style="padding:16px 18px;border-bottom:1px solid var(--border);display:grid;grid-template-columns:74px minmax(0,1fr) auto;gap:14px;align-items:start">
             <div class="thumb" style="background:repeating-linear-gradient(135deg,var(--complant-bg) 0 8px,#F5E1D2 8px 16px)"><span class="thumb-label" style="color:var(--complant-text)">LINE photo</span></div>
             <div style="min-width:0">
@@ -950,7 +1002,7 @@ function renderComplant(){
             </div>
             <div style="display:flex;flex-direction:column;gap:8px;align-items:stretch">
               ${canClose
-                ? `<button class="btn-primary" style="padding:9px 14px;white-space:nowrap" data-action="openCloseCase" data-idx="${i}">ปิดเคส</button>`
+                ? `<button class="btn-primary" style="padding:9px 14px;white-space:nowrap" data-action="openCloseCase" data-idx="${c.originalIndex}">ปิดเคส</button>`
                 : `<div style="text-align:center;border:1px solid var(--border);color:var(--text-faint);font-size:12.5px;padding:9px 14px;border-radius:10px;white-space:nowrap">ปิดเคสได้เฉพาะพนักงาน</div>`}
               <button class="btn-outline" style="padding:9px 14px;white-space:nowrap" data-nav="tracking">ดูไทม์ไลน์</button>
             </div>
@@ -958,6 +1010,7 @@ function renderComplant(){
       </div>
     </section>
 
+    ${isDoctor ? '' : `
     <aside class="card" style="padding:20px">
       <h2 style="margin:0 0 4px;font-family:Prompt,sans-serif;font-weight:600;font-size:15px">เปิดเคส Complant ใหม่</h2>
       <p style="margin:0 0 16px;font-size:11.5px;color:var(--text-sub);line-height:1.6">พนักงานเปิด LINE OA คู่กับระบบ แล้วคัดลอกข้อความ/รูปที่ลูกค้าส่งมาเข้าที่นี่</p>
@@ -982,7 +1035,7 @@ function renderComplant(){
         </div>
         <button class="btn-primary" data-action="openComplantSuccess">เปิดเคส → เปลี่ยนเป็น Complant</button>
       </div>
-    </aside>
+    </aside>`}
   </div>`;
 }
 
@@ -1030,8 +1083,16 @@ function renderCloseCaseModal(){
 
 /* ======================= REVIEW ======================= */
 function renderReview(){
-  const eligible = customers.filter(c=>c.status==='review' || c.status==='happy').slice(0,4).map((c,i)=>({...c, initial:c.name.trim().charAt(2)||'ล'}));
+  const isDoctor = state.role==='doctor';
+  const myDoctorName = DOCTORS[0];
+  const eligible = customers
+    .filter(c=>c.status==='review' || c.status==='happy')
+    .filter(c=>!isDoctor || c.doctor===myDoctorName)
+    .slice(0,4)
+    .map((c)=>({...c, initial:c.name.trim().charAt(2)||'ล'}));
   const picked = eligible[state.reviewPicked] || eligible[0] || {name:'—', procedure:'—'};
+  const visibleReviews = reviewsSaved.filter(r=>!isDoctor || r.doctor===myDoctorName);
+
   return `
   <div class="grid-auto" style="grid-template-columns:repeat(auto-fit,minmax(360px,1fr));align-items:start">
     <div style="display:flex;flex-direction:column;gap:16px">
@@ -1039,9 +1100,10 @@ function renderReview(){
         <div style="display:flex;align-items:center;gap:10px;padding:15px 18px;border-bottom:1px solid var(--border)">
           <h2 style="margin:0;font-family:Prompt,sans-serif;font-weight:600;font-size:15px">หัตถการที่รีวิวได้</h2>
           <span class="pill" style="color:var(--primary-deep);background:var(--mint)">Happy · ไม่มี complant ค้าง</span>
+          ${isDoctor ? `<span style="font-size:11.5px;color:var(--text-sub)">เฉพาะเคสของ ${esc(myDoctorName)}</span>` : ''}
         </div>
         <div style="display:flex;flex-direction:column">
-          ${eligible.map((e,i)=>`
+          ${eligible.length===0 ? `<div style="padding:26px;text-align:center;color:var(--text-faint);font-size:12.5px">ไม่มีหัตถการที่รีวิวได้ในตอนนี้</div>` : eligible.map((e,i)=>`
             <div style="padding:14px 18px;border-bottom:1px solid var(--border);display:flex;align-items:center;gap:14px">
               <div style="width:34px;height:34px;border-radius:50%;background:var(--mint);display:flex;align-items:center;justify-content:center;font-size:12.5px;font-family:Prompt,sans-serif;color:var(--primary-deep)">${esc(e.initial)}</div>
               <div style="min-width:0">
@@ -1050,7 +1112,7 @@ function renderReview(){
               </div>
               <div style="margin-left:auto;display:flex;align-items:center;gap:9px">
                 <span class="pill" style="background:var(--mint);color:var(--primary-deep)">Happy</span>
-                <button style="border:1px solid var(--primary);color:var(--primary-deep);font-size:12.5px;padding:8px 13px;border-radius:10px;cursor:pointer;white-space:nowrap;background:none" data-action="pickReview" data-idx="${i}">บันทึกรีวิว</button>
+                ${isDoctor ? '' : `<button style="border:1px solid var(--primary);color:var(--primary-deep);font-size:12.5px;padding:8px 13px;border-radius:10px;cursor:pointer;white-space:nowrap;background:none" data-action="pickReview" data-idx="${i}">บันทึกรีวิว</button>`}
               </div>
             </div>`).join('')}
         </div>
@@ -1059,7 +1121,7 @@ function renderReview(){
       <section class="card" style="overflow:hidden">
         <div style="padding:15px 18px;border-bottom:1px solid var(--border)"><h2 style="margin:0;font-family:Prompt,sans-serif;font-weight:600;font-size:15px">รีวิวที่บันทึกแล้ว</h2></div>
         <div class="grid-auto" style="grid-template-columns:repeat(auto-fit,minmax(260px,1fr));padding:18px">
-          ${reviewsSaved.map(r=>`
+          ${visibleReviews.length===0 ? `<div style="padding:16px;text-align:center;color:var(--text-faint);font-size:12.5px">ยังไม่มีรีวิวที่บันทึกไว้</div>` : visibleReviews.map(r=>`
             <div style="background:var(--review-bg);border:1px solid var(--review-border);border-radius:12px;padding:15px">
               <div style="display:flex;align-items:center;gap:9px">
                 <span class="pill" style="background:#fff;color:var(--review-text)">Review</span>
@@ -1074,6 +1136,7 @@ function renderReview(){
       </section>
     </div>
 
+    ${isDoctor ? '' : `
     <aside class="card" style="padding:20px">
       <h2 style="margin:0 0 4px;font-family:Prompt,sans-serif;font-weight:600;font-size:15px">บันทึกรีวิวจาก LINE</h2>
       <p style="margin:0 0 16px;font-size:11.5px;color:var(--text-sub);line-height:1.6">พนักงานพิมพ์ข้อความรีวิวที่ลูกค้าส่งเข้ามาใน LINE OA</p>
@@ -1098,7 +1161,7 @@ function renderReview(){
         </div>
         <button class="btn-primary" data-action="saveReview">บันทึกรีวิว</button>
       </div>
-    </aside>
+    </aside>`}
   </div>`;
 }
 
@@ -1107,10 +1170,13 @@ function renderTracking(){
   const filters = ['ทั้งหมด','Happy','Complant','Review'];
   const filterKeyMap = { 'ทั้งหมด':null, 'Happy':'happy', 'Complant':'complant', 'Review':'review' };
   const activeKey = filterKeyMap[state.trackFilter];
+  const isDoctor = state.role==='doctor';
+  const myDoctorName = DOCTORS[0];
 
   const visibleItems = trackItems
     .map((t, originalIndex) => ({ ...t, originalIndex }))
-    .filter(t => activeKey===null || t.status===activeKey);
+    .filter(t => activeKey===null || t.status===activeKey)
+    .filter(t => !isDoctor || t.doctor===myDoctorName);
 
   const stillValid = visibleItems.some(t => t.originalIndex === state.trackIndex);
   const selectedOriginalIndex = stillValid ? state.trackIndex : (visibleItems[0] ? visibleItems[0].originalIndex : null);
@@ -1126,6 +1192,7 @@ function renderTracking(){
         <div style="display:flex;gap:5px;margin-top:11px;flex-wrap:wrap">
           ${filters.map(f=>`<button class="filter-chip ${state.trackFilter===f?'active':''}" data-action="setTrackFilter" data-filter="${f}">${f}</button>`).join('')}
         </div>
+        ${isDoctor ? `<div style="font-size:11px;color:var(--text-sub);margin-top:9px">แสดงเฉพาะเคสของ ${esc(myDoctorName)}</div>` : ''}
       </div>
       <div style="display:flex;flex-direction:column">
         ${visibleItems.length===0 ? `<div style="padding:26px 16px;text-align:center;color:var(--text-faint);font-size:12.5px">ไม่มีเคสในสถานะนี้</div>` : visibleItems.map(t=>{
@@ -1296,6 +1363,169 @@ function renderExport(){
   </div>`;
 }
 
+/* ======================= USERS (admin) ======================= */
+function renderUsers(){
+  const roleBadge = { staff:['พนักงาน','var(--card)','var(--text-sub)'], doctor:['แพทย์',' var(--mint)','var(--primary-deep)'], admin:['ผู้ดูแลระบบ','#E6E9F5','#4B4F91'] };
+  return `
+  <section class="card" style="overflow:hidden">
+    <div style="display:flex;align-items:center;gap:14px;flex-wrap:wrap;padding:16px 18px;border-bottom:1px solid var(--border)">
+      <h2 style="margin:0;font-family:Prompt,sans-serif;font-weight:600;font-size:15px">ผู้ใช้ทั้งหมด</h2>
+      <span style="font-size:12px;color:var(--text-sub)">${systemUsers.length} บัญชี · ใช้งานอยู่ ${systemUsers.filter(u=>u.active).length}</span>
+      <button class="btn-primary" style="margin-left:auto;padding:9px 16px" data-action="addUser">+ เพิ่มผู้ใช้</button>
+    </div>
+    <table class="datatable">
+      <thead><tr><th>ชื่อ</th><th>Username</th><th>บทบาท</th><th>เข้าใช้งานล่าสุด</th><th>สถานะ</th><th style="width:150px">จัดการ</th></tr></thead>
+      <tbody>
+        ${systemUsers.map(u=>{
+          const [label,bg,text] = roleBadge[u.role];
+          return `
+          <tr>
+            <td style="color:var(--text);font-weight:500">${esc(u.name)}</td>
+            <td style="font-family:ui-monospace,Menlo,monospace">${esc(u.username)}</td>
+            <td><span class="pill" style="background:${bg};color:${text}">${label}</span></td>
+            <td>${esc(u.lastLogin)}</td>
+            <td>${u.active
+              ? `<span class="pill" style="background:var(--happy-bg);color:var(--happy)">ใช้งานอยู่</span>`
+              : `<span class="pill" style="background:#F3F3F3;color:var(--text-faint)">ปิดการใช้งาน</span>`}</td>
+            <td>
+              <div style="display:flex;gap:6px">
+                <button style="background:none;border:1px solid var(--border);border-radius:8px;padding:5px 9px;font-size:11.5px;cursor:pointer;color:var(--text-sub)" data-action="editUser" data-id="${u.id}">แก้ไข</button>
+                <button style="background:none;border:1px solid ${u.active?'var(--complant-border)':'var(--border)'};border-radius:8px;padding:5px 9px;font-size:11.5px;cursor:pointer;color:${u.active?'var(--complant-text)':'var(--primary-deep)'}" data-action="askToggleUser" data-id="${u.id}">${u.active?'ปิดใช้งาน':'เปิดใช้งาน'}</button>
+              </div>
+            </td>
+          </tr>`;
+        }).join('')}
+      </tbody>
+    </table>
+  </section>
+  ${state.userEditing !== null ? renderUserModal() : ''}
+  ${state.userDeactivating !== null ? renderUserToggleModal() : ''}
+  `;
+}
+
+function renderUserModal(){
+  const isNew = state.userEditing === 'new';
+  const u = isNew ? {name:'',username:'',role:'staff'} : systemUsers.find(x=>x.id===state.userEditing);
+  if(!u) return '';
+  return `
+  <div class="modal-overlay" data-action="closeUserModalOverlay">
+    <div class="modal-box" style="width:min(440px,100%)" data-stop="1">
+      <div style="display:flex;align-items:flex-start;gap:12px">
+        <h2 style="margin:0;font-family:Prompt,sans-serif;font-weight:600;font-size:18px">${isNew ? 'เพิ่มผู้ใช้ใหม่' : 'แก้ไขผู้ใช้'}</h2>
+        <button style="margin-left:auto;font-size:18px;color:var(--text-sub);cursor:pointer;line-height:1;padding:2px 6px;background:none;border:none" data-action="closeUserModal">×</button>
+      </div>
+      <div style="display:flex;flex-direction:column;gap:13px;margin-top:16px">
+        <label style="display:flex;flex-direction:column;gap:6px"><span style="font-size:11.5px;color:var(--text-sub)">ชื่อ-นามสกุล</span><input id="u_name" value="${esc(u.name)}"></label>
+        <label style="display:flex;flex-direction:column;gap:6px"><span style="font-size:11.5px;color:var(--text-sub)">Username</span><input id="u_username" value="${esc(u.username)}"></label>
+        <label style="display:flex;flex-direction:column;gap:6px"><span style="font-size:11.5px;color:var(--text-sub)">บทบาท</span>
+          <select id="u_role">
+            <option value="staff" ${u.role==='staff'?'selected':''}>พนักงาน</option>
+            <option value="doctor" ${u.role==='doctor'?'selected':''}>แพทย์</option>
+            <option value="admin" ${u.role==='admin'?'selected':''}>ผู้ดูแลระบบ</option>
+          </select>
+        </label>
+        ${isNew ? `<label style="display:flex;flex-direction:column;gap:6px"><span style="font-size:11.5px;color:var(--text-sub)">รหัสผ่านชั่วคราว</span><input value="Aurea@2569" readonly></label>` : ''}
+        <div style="display:flex;gap:10px;margin-top:2px">
+          <button class="btn-primary" style="flex:1" data-action="saveUserModal" data-id="${isNew?'new':u.id}">${isNew ? 'เพิ่มผู้ใช้' : 'บันทึกการแก้ไข'}</button>
+          <button class="btn-outline" data-action="closeUserModal">ยกเลิก</button>
+        </div>
+      </div>
+    </div>
+  </div>`;
+}
+
+function renderUserToggleModal(){
+  const u = systemUsers.find(x=>x.id===state.userDeactivating);
+  if(!u) return '';
+  const willActivate = !u.active;
+  return `
+  <div class="modal-overlay" data-action="closeUserToggleOverlay">
+    <div class="modal-box" style="width:min(420px,100%)" data-stop="1">
+      <h2 style="margin:0;font-family:Prompt,sans-serif;font-weight:600;font-size:17px">${willActivate ? 'เปิดใช้งานบัญชีนี้?' : 'ปิดใช้งานบัญชีนี้?'}</h2>
+      <p style="font-size:13px;color:var(--text-sub);line-height:1.6;margin:12px 0 0">${esc(u.name)} (${esc(u.username)}) ${willActivate ? 'จะสามารถเข้าสู่ระบบได้อีกครั้ง' : 'จะไม่สามารถเข้าสู่ระบบได้จนกว่าจะเปิดใช้งานอีกครั้ง'}</p>
+      <div style="display:flex;gap:10px;margin-top:18px">
+        <button class="btn-outline" style="flex:1" data-action="closeUserToggleModal">ยกเลิก</button>
+        <button class="btn-primary" style="flex:1" data-action="confirmToggleUser" data-id="${u.id}">${willActivate ? 'เปิดใช้งาน' : 'ปิดใช้งาน'}</button>
+      </div>
+    </div>
+  </div>`;
+}
+
+/* ======================= SETTINGS (admin) ======================= */
+function renderSettings(){
+  const tabs = [['staff','แพทย์ & พนักงานขาย'],['clinic','ข้อมูลคลินิก'],['procedures','Procedure Catalog']];
+  return `
+  <div style="display:flex;flex-direction:column;gap:18px">
+    <div class="tab-switch">
+      ${tabs.map(([id,label])=>`<button class="tab-btn ${state.settingsTab===id?'active':''}" data-action="setSettingsTab" data-tab="${id}">${esc(label)}</button>`).join('')}
+    </div>
+
+    ${state.settingsTab==='staff' ? `
+    <div class="grid-auto" style="grid-template-columns:repeat(auto-fit,minmax(300px,1fr));align-items:start">
+      <section class="card" style="padding:18px">
+        <h2 style="margin:0 0 4px;font-family:Prompt,sans-serif;font-weight:600;font-size:15px">รายชื่อแพทย์</h2>
+        <p style="margin:0 0 14px;font-size:11.5px;color:var(--text-sub)">ใช้เป็นตัวเลือก "แพทย์ผู้ดูแล" ในหน้า Input และ Export</p>
+        <div style="display:flex;flex-direction:column;gap:8px">
+          ${DOCTORS.map(d=>`
+            <div style="display:flex;align-items:center;gap:10px;border:1px solid var(--border);border-radius:10px;padding:10px 13px">
+              <span style="font-size:13px;font-weight:500">${esc(d)}</span>
+              <span style="margin-left:auto;font-size:11px;color:var(--text-sub)">${customers.filter(c=>c.doctor===d).length} เคส</span>
+            </div>`).join('')}
+          <button style="display:flex;align-items:center;justify-content:center;gap:7px;border:1px dashed var(--border);border-radius:10px;padding:10px;font-size:12.5px;color:var(--primary-deep);cursor:pointer;background:none" data-action="mockAddStaticItem" data-kind="แพทย์">+ เพิ่มแพทย์</button>
+        </div>
+      </section>
+      <section class="card" style="padding:18px">
+        <h2 style="margin:0 0 4px;font-family:Prompt,sans-serif;font-weight:600;font-size:15px">รายชื่อพนักงานขาย (Sale)</h2>
+        <p style="margin:0 0 14px;font-size:11.5px;color:var(--text-sub)">ใช้เป็นตัวเลือก "พนักงานขาย" ตอนบันทึกข้อมูลลูกค้า</p>
+        <div style="display:flex;flex-direction:column;gap:8px">
+          ${SALES.map(s=>`
+            <div style="display:flex;align-items:center;gap:10px;border:1px solid var(--border);border-radius:10px;padding:10px 13px">
+              <span style="font-size:13px;font-weight:500">${esc(s)}</span>
+              <span style="margin-left:auto;font-size:11px;color:var(--text-sub)">${customers.filter(c=>c.sale===s).length} เคส</span>
+            </div>`).join('')}
+          <button style="display:flex;align-items:center;justify-content:center;gap:7px;border:1px dashed var(--border);border-radius:10px;padding:10px;font-size:12.5px;color:var(--primary-deep);cursor:pointer;background:none" data-action="mockAddStaticItem" data-kind="พนักงานขาย">+ เพิ่มพนักงานขาย</button>
+        </div>
+      </section>
+    </div>` : ''}
+
+    ${state.settingsTab==='clinic' ? `
+    <section class="card" style="padding:20px;max-width:520px">
+      <h2 style="margin:0 0 16px;font-family:Prompt,sans-serif;font-weight:600;font-size:15px">ข้อมูลคลินิก</h2>
+      <div style="display:flex;flex-direction:column;gap:13px">
+        <label style="display:flex;flex-direction:column;gap:6px"><span style="font-size:11.5px;color:var(--text-sub)">ชื่อคลินิก</span><input value="Aurea Clinic"></label>
+        <label style="display:flex;flex-direction:column;gap:6px"><span style="font-size:11.5px;color:var(--text-sub)">เบอร์ติดต่อ</span><input value="02-123-4567"></label>
+        <label style="display:flex;flex-direction:column;gap:6px"><span style="font-size:11.5px;color:var(--text-sub)">LINE OA ID</span><input value="@aureaclinic"></label>
+        <label style="display:flex;flex-direction:column;gap:6px"><span style="font-size:11.5px;color:var(--text-sub)">เวลาทำการ</span><input value="10:00 – 20:00 น. ทุกวัน"></label>
+        <button class="btn-primary" style="margin-top:4px" data-action="saveSettings">บันทึกการตั้งค่า</button>
+      </div>
+    </section>` : ''}
+
+    ${state.settingsTab==='procedures' ? `
+    <section class="card" style="overflow:hidden">
+      <div style="display:flex;align-items:center;gap:10px;padding:15px 18px;border-bottom:1px solid var(--border)">
+        <h2 style="margin:0;font-family:Prompt,sans-serif;font-weight:600;font-size:15px">รายการหัตถการมาตรฐาน</h2>
+        <button class="btn-primary" style="margin-left:auto;padding:8px 14px" data-action="mockAddStaticItem" data-kind="หัตถการ">+ เพิ่มรายการ</button>
+      </div>
+      <table class="datatable">
+        <thead><tr><th>ชื่อหัตถการ</th><th>หมวดหมู่</th><th>ราคาเริ่มต้น</th></tr></thead>
+        <tbody>
+          ${[
+            ['Filler ร่องแก้ม','ฟิลเลอร์','฿ 8,900 / cc'],
+            ['Botox หน้าผาก','โบท็อกซ์','฿ 6,500 / 20u'],
+            ['Botox กราม','โบท็อกซ์','฿ 7,900 / 50u'],
+            ['Laser Pico หน้า','เลเซอร์','฿ 3,500 / ครั้ง'],
+            ['Laser Toning หน้า','เลเซอร์','฿ 2,900 / ครั้ง'],
+            ['ร้อยไหม','ร้อยไหม','฿ 500 / เส้น'],
+            ['Meso Fat','เมโส','฿ 4,500 / ครั้ง'],
+            ['IV Drip Glutathione','IV Drip','฿ 2,200 / ครั้ง'],
+          ].map(([n,cat,price])=>`
+            <tr><td style="color:var(--text);font-weight:500">${n}</td><td>${cat}</td><td>${price}</td></tr>`).join('')}
+        </tbody>
+      </table>
+    </section>` : ''}
+  </div>`;
+}
+
 /* ======================= RENDER + EVENTS ======================= */
 function renderBody(){
   switch(state.screen){
@@ -1307,6 +1537,8 @@ function renderBody(){
     case 'review': return renderReview();
     case 'tracking': return renderTracking();
     case 'export': return renderExport();
+    case 'users': return renderUsers();
+    case 'settings': return renderSettings();
     default: return '';
   }
 }
@@ -1542,6 +1774,67 @@ function bindEvents(){
   });
   const doExportBtn = root.querySelector('[data-action="doExport"]');
   if(doExportBtn) doExportBtn.addEventListener('click', ()=> showToast('Export ' + state.format + ' สำเร็จ (mockup)'));
+
+  // Users (admin)
+  const addUserBtn = root.querySelector('[data-action="addUser"]');
+  if(addUserBtn) addUserBtn.addEventListener('click', ()=>{ state.userEditing = 'new'; render(); });
+  root.querySelectorAll('[data-action="editUser"]').forEach(el=>{
+    el.addEventListener('click', ()=>{ state.userEditing = Number(el.getAttribute('data-id')); render(); });
+  });
+  root.querySelectorAll('[data-action="askToggleUser"]').forEach(el=>{
+    el.addEventListener('click', ()=>{ state.userDeactivating = Number(el.getAttribute('data-id')); render(); });
+  });
+  const closeUserModalBtns = root.querySelectorAll('[data-action="closeUserModal"], [data-action="closeUserModalOverlay"]');
+  closeUserModalBtns.forEach(el=>{
+    el.addEventListener('click', (e)=>{
+      if(el.getAttribute('data-action')==='closeUserModalOverlay' && e.target.closest('[data-stop]')) return;
+      state.userEditing = null; render();
+    });
+  });
+  const closeUserToggleBtns = root.querySelectorAll('[data-action="closeUserToggleModal"], [data-action="closeUserToggleOverlay"]');
+  closeUserToggleBtns.forEach(el=>{
+    el.addEventListener('click', (e)=>{
+      if(el.getAttribute('data-action')==='closeUserToggleOverlay' && e.target.closest('[data-stop]')) return;
+      state.userDeactivating = null; render();
+    });
+  });
+  const saveUserBtn = root.querySelector('[data-action="saveUserModal"]');
+  if(saveUserBtn) saveUserBtn.addEventListener('click', ()=>{
+    const idAttr = saveUserBtn.getAttribute('data-id');
+    const name = document.getElementById('u_name').value.trim();
+    const username = document.getElementById('u_username').value.trim();
+    const role = document.getElementById('u_role').value;
+    if(idAttr==='new'){
+      const newId = Math.max(0,...systemUsers.map(u=>u.id))+1;
+      systemUsers.push({ id:newId, name, username, role, active:true, lastLogin:'ยังไม่เคยเข้าใช้งาน' });
+      showToast('เพิ่มผู้ใช้ใหม่แล้ว');
+    } else {
+      const id = Number(idAttr);
+      const u = systemUsers.find(x=>x.id===id);
+      if(u){ Object.assign(u, {name, username, role}); }
+      showToast('บันทึกการแก้ไขแล้ว');
+    }
+    state.userEditing = null;
+    render();
+  });
+  const confirmToggleBtn = root.querySelector('[data-action="confirmToggleUser"]');
+  if(confirmToggleBtn) confirmToggleBtn.addEventListener('click', ()=>{
+    const id = Number(confirmToggleBtn.getAttribute('data-id'));
+    const u = systemUsers.find(x=>x.id===id);
+    if(u){ u.active = !u.active; showToast(u.active ? 'เปิดใช้งานบัญชีแล้ว' : 'ปิดใช้งานบัญชีแล้ว'); }
+    state.userDeactivating = null;
+    render();
+  });
+
+  // Settings (admin)
+  root.querySelectorAll('[data-action="setSettingsTab"]').forEach(el=>{
+    el.addEventListener('click', ()=>{ state.settingsTab = el.getAttribute('data-tab'); render(); });
+  });
+  const saveSettingsBtn = root.querySelector('[data-action="saveSettings"]');
+  if(saveSettingsBtn) saveSettingsBtn.addEventListener('click', ()=> showToast('บันทึกการตั้งค่าแล้ว (mockup)'));
+  root.querySelectorAll('[data-action="mockAddStaticItem"]').forEach(el=>{
+    el.addEventListener('click', ()=> showToast('เพิ่ม' + el.getAttribute('data-kind') + 'ใหม่ (mockup)'));
+  });
 }
 
 function restoreFocus(id){
